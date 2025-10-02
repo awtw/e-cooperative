@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Git Commit Rules
+feat: Develop new features e.g. feat: add deposit feature
+fix: Fix bugs e.g. fix: fix error
+refactor: Optimize existing code e.g. refactor: optimize xxx
+docs: Update project documentation e.g. docs: update README
+style: Code style/linting rules e.g. style: add ESLint no-space rules
+test: Add or modify test-related code e.g. test: add Deposit E2E test
+
+1. check the staged changes.
+2. check the actual changes in these files to understand what was modified.
+3. generate the commit message by the rules above

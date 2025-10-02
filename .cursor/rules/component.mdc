@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+1. when implement a component, always consider using library from shadcn/ui, which is in @/app/components/ui folder
+2. always optimize the code for better reading & reusing
+
+
