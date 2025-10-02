@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+
+this is backend api swagger
+http://hanservice.synology.me:8923/api/v1/openapi.json
