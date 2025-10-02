@@ -69,6 +69,7 @@ export function LoginForm({
       toast.success("登入成功");
       router.push("/dashboard");
     } catch (error) {
+      console.error(error);
       toast.error("發生錯誤");
       setIsLoading(false);
     }
