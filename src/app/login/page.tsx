@@ -1,8 +1,8 @@
-import { HeartHandshake } from "lucide-react"
+import { HeartHandshake } from "lucide-react";
 
-import { LoginForm } from "@/components/login-form"
-import Image from "next/image"
-import { COMPANY_NAME } from "@/constant"
+import { LoginForm } from "@/components/login-form";
+import Image from "next/image";
+import { COMPANY_NAME } from "@/constant";
 
 export default function LoginPage() {
   return (
@@ -32,5 +32,5 @@ export default function LoginPage() {
         />
       </div>
     </div>
-  )
+  );
 }

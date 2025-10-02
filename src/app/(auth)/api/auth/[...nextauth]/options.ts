@@ -1,7 +1,6 @@
 import { Session, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-
 export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
@@ -23,14 +22,13 @@ export const authOptions: NextAuthOptions = {
           email: credentials.email,
           password: credentials.password,
         };
-
       },
     }),
   ],
   callbacks: {
     async session({ session, token }: { session: Session; token: any }) {
       // if (session.user) {
-        
+
       // }
       return session;
     },

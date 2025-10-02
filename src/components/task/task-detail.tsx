@@ -1,5 +1,3 @@
-export const TaskDetail = ({
-    
-}) => {
+export const TaskDetail = ({}) => {
   return <div>TaskDetail</div>;
 };
