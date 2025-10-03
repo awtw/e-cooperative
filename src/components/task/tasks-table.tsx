@@ -39,7 +39,30 @@ import {
   TaskType,
   LocationData,
 } from "@/types/task";
-import { data } from "./data";
+import { useGetTasks } from "./hooks/useGetTasks";
+
+const DeadlineCell = ({ deadline }: { deadline: string | null }) => {
+  const date = deadline ? new Date(deadline) : null;
+  const [now, setNow] = React.useState<Date | null>(null);
+  React.useEffect(() => {
+    setNow(new Date());
+  }, []);
+  if (!date) return <div className="text-gray-400">無</div>;
+  const isOverdue = now ? date < now : false;
+  const dateStr = date.toLocaleDateString("zh-TW", { timeZone: "Asia/Taipei" });
+  const timeStr = date.toLocaleTimeString("zh-TW", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Taipei",
+  });
+  return (
+    <div className={`text-sm ${isOverdue ? "text-red-600" : ""}`}>
+      {dateStr}
+      <br />
+      <span className="text-xs text-gray-500">{timeStr}</span>
+    </div>
+  );
+};
 
 const getStatusColor = (status: TaskStatus) => {
   switch (status) {
@@ -209,24 +232,7 @@ export const columns: ColumnDef<TaskInterface>[] = [
     header: "截止時間",
     cell: ({ row }) => {
       const deadline = row.getValue("deadline") as string | null;
-      if (!deadline) return <div className="text-gray-400">無</div>;
-
-      const date = new Date(deadline);
-      const now = new Date();
-      const isOverdue = date < now;
-
-      return (
-        <div className={`text-sm ${isOverdue ? "text-red-600" : ""}`}>
-          {date.toLocaleDateString("zh-TW")}
-          <br />
-          <span className="text-xs text-gray-500">
-            {date.toLocaleTimeString("zh-TW", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
-        </div>
-      );
+      return <DeadlineCell deadline={deadline} />;
     },
   },
   {
@@ -263,6 +269,7 @@ export const columns: ColumnDef<TaskInterface>[] = [
   },
 ];
 export function TasksTable() {
+  const { data, isFetching } = useGetTasks();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -288,6 +295,13 @@ export function TasksTable() {
       rowSelection,
     },
   });
+
+  console.log(isFetching);
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">

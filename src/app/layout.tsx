@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { COMPANY_NAME } from "@/constant";
 import { Toaster } from "sonner";
+import { Header } from "@/components/common";
 
 export const metadata: Metadata = {
   title: COMPANY_NAME,
@@ -81,6 +82,7 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
+          <Header />
           {children}
           <Toaster position="top-center" />
         </Providers>
