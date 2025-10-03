@@ -372,7 +372,7 @@ export const mockData: TaskInterface[] = [
     task_type: "cleanup",
     location_data: {
       address: "屏東縣屏東市自由路527號",
-      coordinates: { lat: 22.6760, lng: 120.4941 },
+      coordinates: { lat: 22.676, lng: 120.4941 },
       details: "屏東縣政府",
     },
     required_volunteers: 20,

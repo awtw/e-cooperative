@@ -290,7 +290,7 @@ export function TasksTable() {
     },
   });
 
-console.log(isFetching);
+  console.log(isFetching);
 
   if (isFetching) {
     return <div>Loading...</div>;
