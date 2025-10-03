@@ -111,7 +111,10 @@ export const TasksCards = () => {
           </CardContent>
           <CardFooter className="justify-between">
             <div className="text-xs text-muted-foreground">
-              建立於 {new Date(task.created_at).toLocaleDateString("zh-TW")}
+              {(() => {
+                const d = new Date(task.created_at);
+                return `建立於 ${d.toLocaleDateString("zh-TW", { timeZone: "Asia/Taipei" })}`;
+              })()}
             </div>
             <Link href={`/tasks/${task.id}`}>
               <Button size="sm" aria-label="查看詳情">查看詳情</Button>

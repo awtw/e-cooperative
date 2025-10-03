@@ -53,11 +53,15 @@ export default function TaskDetailPage({
             </div>
             <div>
               <div className="text-sm text-muted-foreground">建立時間</div>
-              <div>{new Date(task.created_at).toLocaleString("zh-TW")}</div>
+              <div>
+                {new Date(task.created_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}
+              </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">最後更新</div>
-              <div>{new Date(task.updated_at).toLocaleString("zh-TW")}</div>
+              <div>
+                {new Date(task.updated_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}
+              </div>
             </div>
           </div>
         </CardContent>
