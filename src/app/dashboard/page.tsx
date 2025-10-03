@@ -1,11 +1,3 @@
-import { Header } from "@/components/common";
-import { TasksTable } from "@/components/task";
-
 export default async function DashboardPage() {
-  return (
-    <div className="space-y-5 p-4 h-full">
-      <Header />
-      <TasksTable />
-    </div>
-  );
+  return <div className="space-y-5 p-4 h-full">登入後第一內頁，尚未開發</div>;
 }

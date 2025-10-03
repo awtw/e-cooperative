@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, }: { session: Session; }) {
+    async session({ session }: { session: Session }) {
       return session;
     },
   },
