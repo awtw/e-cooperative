@@ -39,7 +39,7 @@ import {
   TaskType,
   LocationData,
 } from "@/types/task";
-import { data } from "./data";
+import { useGetTasks } from "./hooks/useGetTasks";
 
 const getStatusColor = (status: TaskStatus) => {
   switch (status) {
@@ -263,6 +263,7 @@ export const columns: ColumnDef<TaskInterface>[] = [
   },
 ];
 export function TasksTable() {
+  const { data, isFetching } = useGetTasks();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -288,6 +289,13 @@ export function TasksTable() {
       rowSelection,
     },
   });
+
+  console.log(isFetching);
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">

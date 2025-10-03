@@ -28,7 +28,7 @@
 
 ### 環境需求
 
-- Node.js 18+ 
+- Node.js 18+
 - npm/yarn/pnpm
 
 ### 安裝依賴
