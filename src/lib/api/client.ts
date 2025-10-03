@@ -1,4 +1,4 @@
-import createClient, { type Client, type FetchOptions, type Middleware } from "openapi-fetch";
+import createClient, { type Client, type Middleware } from "openapi-fetch";
 import type { paths } from "./types";
 
 export const API_BASE_URL: string =
@@ -21,9 +21,9 @@ const createAuthMiddleware = (getAccessToken?: () => string | undefined): Middle
 export const createApiClient = (
   getAccessToken?: () => string | undefined,
   baseUrl: string = API_BASE_URL,
-  fetchOptions?: FetchOptions,
+  customFetch?: typeof fetch,
 ): ApiClient => {
-  const client = createClient<paths>({ baseUrl, fetch: fetchOptions?.fetch });
+  const client = createClient<paths>({ baseUrl, fetch: customFetch });
   client.use(createAuthMiddleware(getAccessToken));
   return client;
 };
