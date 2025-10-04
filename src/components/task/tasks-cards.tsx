@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
 import { useGetTasks } from "./hooks/useGetTasks";
+import { getTaskById } from "@/service/task";
 
 const getTaskTypeLabel = (type: TaskType) => {
   switch (type) {
@@ -49,6 +51,8 @@ const getStatusBadge = (status: TaskStatus) => {
 };
 
 export const TasksCards = () => {
+  const router = useRouter();
+  const qc = useQueryClient();
   const { data: tasks, isFetching } = useGetTasks();
 
   if (isFetching) {
@@ -64,11 +68,13 @@ export const TasksCards = () => {
       {tasks.map((task: TaskInterface) => (
         <Card key={task.id} className="transition-colors">
           <CardHeader className="gap-2">
-            <CardTitle className="line-clamp-1 text-base sm:text-lg">
+            <CardTitle className="line-clamp-2 text-base sm:text-lg">
               {task.title}
             </CardTitle>
             <CardDescription className="flex flex-wrap items-center gap-2">
-              <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusBadge(task.status)}`}>
+              <span
+                className={`px-2 py-0.5 text-xs rounded-full ${getStatusBadge(task.status)}`}
+              >
                 {task.status === "pending" && "待審核"}
                 {task.status === "available" && "可認領"}
                 {task.status === "claimed" && "已認領"}
@@ -77,34 +83,34 @@ export const TasksCards = () => {
                 {task.status === "cancelled" && "已取消"}
               </span>
               <span className="text-xs text-muted-foreground">
-                {getTaskTypeLabel(task.task_type)}
+                {getTaskTypeLabel(task.type)}
               </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="text-sm text-muted-foreground line-clamp-3">
               {task.description}
             </p>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div className="flex flex-col">
                 <span className="text-muted-foreground">地點</span>
-                <span className="line-clamp-1" title={task.location_data.address}>
-                  {task.location_data.address}
+                <span className="line-clamp-1" title={task.work_location}>
+                  {task.work_location}
                 </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">需要人數</span>
                 <span>
-                  {task.claimed_count}/{task.required_volunteers}
+                  {task.claimed_count}/{task.required_number_of_people}
                 </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">優先級</span>
-                <span>{task.priority_level}/5</span>
+                <span>{task.danger_level}/5</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">建立者</span>
-                <span>{task.creator_name || "未知"}</span>
+                <span>{task.creator_name || "光復e互助平台"}</span>
               </div>
             </div>
           </CardContent>
@@ -115,14 +121,27 @@ export const TasksCards = () => {
                 return `建立於 ${d.toLocaleDateString("zh-TW", { timeZone: "Asia/Taipei" })}`;
               })()}
             </div>
-            <Link href={`/tasks/${task.id}`}>
-              <Button size="sm" aria-label="查看詳情">查看詳情</Button>
-            </Link>
+            <Button
+              size="sm"
+              aria-label="查看詳情"
+              onMouseEnter={() => {
+                // prefetch single task on hover to improve UX
+                qc.prefetchQuery({
+                  queryKey: ["task", task.id],
+                  queryFn: () => getTaskById(task.id),
+                });
+              }}
+              onClick={() => {
+                // set the single task in cache so detail can read it immediately
+                qc.setQueryData(["task", task.id], task);
+                router.push(`/tasks/${task.id}`);
+              }}
+            >
+              查看詳情
+            </Button>
           </CardFooter>
         </Card>
       ))}
     </div>
   );
 };
-
-
