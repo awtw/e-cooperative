@@ -32,6 +32,7 @@ export interface TaskInterface {
   type: TaskType;
   work_location: string;
   required_number_of_people: number;
+  maximum_number_of_people?: number;
   required_skills?: string[] | null;
   start_at?: string | null;
   deadline?: string | null;

@@ -4,12 +4,13 @@
 import { mockData } from "@/components/task/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function TaskDetailPage({
+export default async function TaskDetailPage({
   params,
 }: {
-  params: { taskId: string };
+  params: Promise<{ taskId: string }>;
 }) {
-  const task = mockData.find((t) => t.id === params.taskId);
+  const { taskId } = await params;
+  const task = mockData.find((t) => t.id === taskId);
 
   if (!task) {
     return <div className="p-4">找不到此任務</div>;
@@ -39,9 +40,12 @@ export default function TaskDetailPage({
             </div>
             <div>
               <div className="text-sm text-muted-foreground">需要人數</div>
-              <div>
-                {task.claimed_count}/{task.required_number_of_people}
-              </div>
+            <div>
+              {(task as unknown as { maximum_number_of_people?: number }).maximum_number_of_people === 0 &&
+              task.required_number_of_people === 0
+                ? "無設定"
+                : `${task.claimed_count}/${task.required_number_of_people}`}
+            </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">優先級</div>

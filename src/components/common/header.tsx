@@ -16,6 +16,7 @@ import { Logo } from "./logo";
 import { COMPANY_NAME } from "@/constant";
 import { LogIn, LogOut, User, Settings, Info } from "lucide-react";
 import Link from "next/link";
+import ThemeToggle from "./theme-toggle";
 
 export const Header = () => {
   const session = useSession();
@@ -62,11 +63,19 @@ export const Header = () => {
             >
               關於平台
             </Link>
+            <Link
+              href="/contact"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              聯絡我們
+            </Link>
           </nav>
         </div>
 
-        {/* 登入狀態 */}
-        {isAuthenticated ? (
+        <div className="flex items-center gap-1.5 md:gap-2">
+          <ThemeToggle />
+          {/* 登入狀態 */}
+          {isAuthenticated ? (
           // 已登入 - 顯示使用者 Dropdown
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -106,6 +115,13 @@ export const Header = () => {
                 <Info className="mr-2 h-4 w-4" />
                 <span>關於平台</span>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push("/contact")}
+                className="md:hidden"
+              >
+                <Info className="mr-2 h-4 w-4" />
+                <span>聯絡我們</span>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>登出</span>
@@ -124,6 +140,7 @@ export const Header = () => {
             <span>組織登入</span>
           </Button>
         )}
+        </div>
       </div>
     </header>
   );

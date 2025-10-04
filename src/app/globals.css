@@ -152,10 +152,10 @@
   --priority-4: oklch(0.65 0.21 40); /* 高 - 橙色 */
   --priority-5: oklch(0.55 0.22 25); /* 緊急 - 紅色 */
 
-  /* 邊框與輸入框 */
-  --border: oklch(0.90 0.004 286); /* #E5E7EB */
-  --input: oklch(0.90 0.004 286);
-  --ring: oklch(0.55 0.22 255); /* 使用主色 */
+  /* 邊框與輸入框（提高亮色模式對比） */
+  --border: oklch(0.82 0.01 286); /* #D1D5DB */
+  --input: oklch(0.88 0.006 286); /* #E5E7EB 近似但更穩定 */
+  --ring: oklch(0.52 0.22 255); /* 較深的主色以提升焦點可見度 */
 
   /* 圖表色 (保留原有) */
   --chart-1: oklch(0.646 0.222 41.116);
@@ -236,10 +236,10 @@
   --priority-4: oklch(0.75 0.19 45); /* 高 - 橙色 */
   --priority-5: oklch(0.65 0.21 27); /* 緊急 - 紅色 */
 
-  /* 邊框與輸入框 */
-  --border: oklch(0.30 0.010 264 / 0.5); /* 半透明邊框 */
-  --input: oklch(0.30 0.010 264 / 0.7);
-  --ring: oklch(0.70 0.20 255); /* 使用主色 */
+  /* 邊框與輸入框（提高暗色模式對比） */
+  --border: oklch(0.42 0.012 264); /* 明顯的深色邊框 */
+  --input: oklch(0.32 0.012 264); /* 輕微亮度提升以區分層級 */
+  --ring: oklch(0.75 0.20 255); /* 更亮焦點色避免與背景混淆 */
 
   /* 圖表色 (保留原有) */
   --chart-1: oklch(0.488 0.243 264.376);
@@ -261,7 +261,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/60;
   }
   body {
     @apply bg-background text-foreground;

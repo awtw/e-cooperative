@@ -1,6 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,12 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ErrorState } from "@/components/ui/error-state";
-import { LoadingState } from "@/components/ui/loading-state";
-import { EmptyState } from "@/components/ui/empty-state";
 import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
 import { useGetTasks } from "./hooks/useGetTasks";
-import { getTaskById } from "@/service/task";
 
 const getTaskTypeLabel = (type: TaskType) => {
   switch (type) {
@@ -54,49 +49,69 @@ const getStatusBadge = (status: TaskStatus) => {
 };
 
 export const TasksCards = () => {
-  const router = useRouter();
-  const qc = useQueryClient();
-  const { data: tasks, isLoading, isError, error, refetch } = useGetTasks();
+  const { data: tasks, isFetching, isError, error, refetch } = useGetTasks();
 
-  // 載入狀態 - 使用骨架屏
-  if (isLoading) {
-    return <LoadingState variant="skeleton" count={8} />;
-  }
-
-  // 錯誤狀態 - 顯示錯誤訊息和重試按鈕
-  if (isError) {
+  if (isFetching) {
     return (
-      <ErrorState
-        error={error}
-        onRetry={() => refetch()}
-        title="無法載入任務列表"
-        showHomeButton={false}
-      />
+      <div className="p-6 sm:p-8">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader className="gap-2">
+                <div className="h-4 w-1/2 rounded bg-muted" />
+                <div className="h-3 w-1/3 rounded bg-muted" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="h-3 w-full rounded bg-muted" />
+                <div className="h-3 w-5/6 rounded bg-muted" />
+                <div className="h-3 w-4/6 rounded bg-muted" />
+              </CardContent>
+              <CardFooter className="justify-between">
+                <div className="h-3 w-24 rounded bg-muted" />
+                <div className="h-8 w-20 rounded bg-muted" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
     );
   }
 
-  // 空狀態 - 沒有任務資料
+  if (isError) {
+    return (
+      <div className="p-6 sm:p-8">
+        <div className="mx-auto max-w-md rounded-md border bg-card p-4 text-card-foreground">
+          <div className="mb-2 text-base font-medium">載入失敗</div>
+          <div className="mb-4 text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "請稍後再試"}
+          </div>
+          <Button onClick={() => refetch()} variant="outline">重新整理</Button>
+        </div>
+      </div>
+    );
+  }
+
   if (!tasks || tasks.length === 0) {
     return (
-      <EmptyState
-        title="目前沒有任務"
-        description="目前還沒有任何災害應變任務，請稍後再回來查看"
-      />
+      <div className="p-6 sm:p-12">
+        <div className="mx-auto max-w-md text-center">
+          <div className="text-2xl font-semibold">目前沒有任務</div>
+          <div className="mt-2 text-muted-foreground">稍後再回來看看，或前往建立新的任務。</div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 p-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:p-4">
       {tasks.map((task: TaskInterface) => (
         <Card key={task.id} className="transition-colors">
           <CardHeader className="gap-2">
-            <CardTitle className="line-clamp-2 text-base sm:text-lg">
+            <CardTitle className="line-clamp-1 text-base sm:text-lg">
               {task.title}
             </CardTitle>
             <CardDescription className="flex flex-wrap items-center gap-2">
-              <span
-                className={`px-2 py-0.5 text-xs rounded-full ${getStatusBadge(task.status)}`}
-              >
+              <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusBadge(task.status)}`}>
                 {task.status === "pending" && "待審核"}
                 {task.status === "available" && "可認領"}
                 {task.status === "claimed" && "已認領"}
@@ -110,7 +125,7 @@ export const TasksCards = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground line-clamp-3">
+            <p className="text-sm text-muted-foreground line-clamp-2">
               {task.description}
             </p>
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -123,7 +138,9 @@ export const TasksCards = () => {
               <div className="flex flex-col">
                 <span className="text-muted-foreground">需要人數</span>
                 <span>
-                  {task.claimed_count}/{task.required_number_of_people}
+                  {task.maximum_number_of_people === 0 && task.required_number_of_people === 0
+                    ? "無設定"
+                    : `${task.claimed_count}/${task.required_number_of_people}`}
                 </span>
               </div>
               <div className="flex flex-col">
@@ -132,7 +149,7 @@ export const TasksCards = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">建立者</span>
-                <span>{task.creator_name || "光復e互助平台"}</span>
+                <span>{task.creator_name || "未知"}</span>
               </div>
             </div>
           </CardContent>
@@ -143,24 +160,9 @@ export const TasksCards = () => {
                 return `建立於 ${d.toLocaleDateString("zh-TW", { timeZone: "Asia/Taipei" })}`;
               })()}
             </div>
-            <Button
-              size="sm"
-              aria-label="查看詳情"
-              onMouseEnter={() => {
-                // prefetch single task on hover to improve UX
-                qc.prefetchQuery({
-                  queryKey: ["task", task.id],
-                  queryFn: () => getTaskById(task.id),
-                });
-              }}
-              onClick={() => {
-                // set the single task in cache so detail can read it immediately
-                qc.setQueryData(["task", task.id], task);
-                router.push(`/tasks/${task.id}`);
-              }}
-            >
-              查看詳情
-            </Button>
+            <Link href={`/tasks/${task.id}`}>
+              <Button size="sm" aria-label="查看詳情">查看詳情</Button>
+            </Link>
           </CardFooter>
         </Card>
       ))}

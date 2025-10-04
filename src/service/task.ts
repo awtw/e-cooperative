@@ -1,8 +1,9 @@
 import { TaskInterface, TaskType, TaskStatus } from "@/types/task";
+import { ApiError, ApiErrorType } from "@/lib/errors/api-error";
 
 // API base URL (fallback to known backend if env not set)
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "https://hualien_guangfu_backend.m9h8.com";
+  process.env.NEXT_PUBLIC_API_URL || "http://60.249.113.11:8000";
 
 type ApiTask = {
   created_at: string;
@@ -83,10 +84,44 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
     });
 
     if (!res.ok) {
-      const txt = await res.text().catch(() => "");
-      throw new Error(
-        `fetch tasks failed: ${res.status} ${res.statusText} ${txt}`,
-      );
+      // 根據 HTTP 狀態碼拋出不同的 ApiError
+      if (res.status >= 500) {
+        throw new ApiError(
+          ApiErrorType.SERVER_ERROR,
+          "伺服器暫時無法處理請求，請稍後再試",
+          {
+            statusCode: res.status,
+            suggestion: "系統可能正在進行維護，請稍後再回來查看",
+          },
+        );
+      } else if (res.status === 404) {
+        throw new ApiError(
+          ApiErrorType.CLIENT_ERROR,
+          "無法找到任務資料",
+          {
+            statusCode: res.status,
+            suggestion: "請確認 API 端點設定是否正確，或聯絡系統管理員",
+          },
+        );
+      } else if (res.status === 401 || res.status === 403) {
+        throw new ApiError(
+          ApiErrorType.CLIENT_ERROR,
+          "您沒有權限存取此資源",
+          {
+            statusCode: res.status,
+            suggestion: "請重新登入或聯絡管理員",
+          },
+        );
+      } else if (res.status >= 400) {
+        throw new ApiError(
+          ApiErrorType.CLIENT_ERROR,
+          "請求發生錯誤，請重新整理頁面",
+          {
+            statusCode: res.status,
+            suggestion: "如果問題持續發生，請聯絡系統管理員",
+          },
+        );
+      }
     }
 
     const resJson: ApiResponse = await res.json();
@@ -103,6 +138,11 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
           ? it.required_number_of_people
           : 0;
 
+      const maximum_number_of_people =
+        typeof it.maximum_number_of_people === "number"
+          ? it.maximum_number_of_people
+          : 0;
+
       const danger_level =
         typeof it.danger_level === "number" ? it.danger_level : 1;
 
@@ -113,6 +153,7 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
         type,
         work_location,
         required_number_of_people,
+        maximum_number_of_people,
         required_skills: null,
         deadline: it.deadline ?? null,
         danger_level,
@@ -135,7 +176,56 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
 
     return mappedData;
   } catch (err) {
-    throw err;
+    // 如果已經是 ApiError，直接拋出
+    if (err instanceof ApiError) {
+      throw err;
+    }
+
+    // 處理網路錯誤
+    if (err instanceof TypeError && err.message.includes("fetch")) {
+      throw new ApiError(
+        ApiErrorType.NETWORK_ERROR,
+        "網路連線異常，無法連接到伺服器",
+        {
+          originalError: err,
+          suggestion: "請檢查您的網路連線後重試",
+        },
+      );
+    }
+
+    // 處理逾時錯誤
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new ApiError(
+        ApiErrorType.TIMEOUT_ERROR,
+        "伺服器回應時間過長",
+        {
+          originalError: err,
+          suggestion: "網路速度可能較慢，請稍後再試",
+        },
+      );
+    }
+
+    // 處理 JSON 解析錯誤
+    if (err instanceof SyntaxError) {
+      throw new ApiError(
+        ApiErrorType.PARSE_ERROR,
+        "資料格式錯誤",
+        {
+          originalError: err,
+          suggestion: "伺服器回應格式不正確，請重新整理頁面",
+        },
+      );
+    }
+
+    // 其他未知錯誤
+    throw new ApiError(
+      ApiErrorType.UNKNOWN_ERROR,
+      "發生未預期的錯誤",
+      {
+        originalError: err,
+        suggestion: "請稍後再試或返回首頁",
+      },
+    );
   } finally {
     clearTimeout(timeout);
   }
@@ -160,10 +250,44 @@ export const getTaskById: (
     });
 
     if (!res.ok) {
-      const txt = await res.text().catch(() => "");
-      throw new Error(
-        `fetch task ${id} failed: ${res.status} ${res.statusText} ${txt}`,
-      );
+      // 根據 HTTP 狀態碼拋出不同的 ApiError
+      if (res.status >= 500) {
+        throw new ApiError(
+          ApiErrorType.SERVER_ERROR,
+          "伺服器暫時無法處理請求，請稍後再試",
+          {
+            statusCode: res.status,
+            suggestion: "系統可能正在進行維護，請稍後再回來查看",
+          },
+        );
+      } else if (res.status === 404) {
+        throw new ApiError(
+          ApiErrorType.CLIENT_ERROR,
+          "找不到此任務",
+          {
+            statusCode: res.status,
+            suggestion: "此任務可能已被刪除或不存在",
+          },
+        );
+      } else if (res.status === 401 || res.status === 403) {
+        throw new ApiError(
+          ApiErrorType.CLIENT_ERROR,
+          "您沒有權限查看此任務",
+          {
+            statusCode: res.status,
+            suggestion: "請重新登入或聯絡管理員",
+          },
+        );
+      } else if (res.status >= 400) {
+        throw new ApiError(
+          ApiErrorType.CLIENT_ERROR,
+          "請求發生錯誤",
+          {
+            statusCode: res.status,
+            suggestion: "請返回任務列表或重新整理頁面",
+          },
+        );
+      }
     }
 
     const it: ApiTask = await res.json();
@@ -178,6 +302,11 @@ export const getTaskById: (
         ? it.required_number_of_people
         : 0;
 
+    const maximum_number_of_people =
+      typeof it.maximum_number_of_people === "number"
+        ? it.maximum_number_of_people
+        : 0;
+
     const danger_level =
       typeof it.danger_level === "number" ? it.danger_level : 1;
 
@@ -188,6 +317,7 @@ export const getTaskById: (
       type,
       work_location,
       required_number_of_people,
+      maximum_number_of_people,
       required_skills: null,
       deadline: it.deadline ?? null,
       danger_level,
@@ -209,7 +339,56 @@ export const getTaskById: (
 
     return mappedData;
   } catch (err) {
-    throw err;
+    // 如果已經是 ApiError，直接拋出
+    if (err instanceof ApiError) {
+      throw err;
+    }
+
+    // 處理網路錯誤
+    if (err instanceof TypeError && err.message.includes("fetch")) {
+      throw new ApiError(
+        ApiErrorType.NETWORK_ERROR,
+        "網路連線異常，無法連接到伺服器",
+        {
+          originalError: err,
+          suggestion: "請檢查您的網路連線後重試",
+        },
+      );
+    }
+
+    // 處理逾時錯誤
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new ApiError(
+        ApiErrorType.TIMEOUT_ERROR,
+        "伺服器回應時間過長",
+        {
+          originalError: err,
+          suggestion: "網路速度可能較慢，請稍後再試",
+        },
+      );
+    }
+
+    // 處理 JSON 解析錯誤
+    if (err instanceof SyntaxError) {
+      throw new ApiError(
+        ApiErrorType.PARSE_ERROR,
+        "資料格式錯誤",
+        {
+          originalError: err,
+          suggestion: "伺服器回應格式不正確，請重新整理頁面",
+        },
+      );
+    }
+
+    // 其他未知錯誤
+    throw new ApiError(
+      ApiErrorType.UNKNOWN_ERROR,
+      "發生未預期的錯誤",
+      {
+        originalError: err,
+        suggestion: "請返回任務列表或重新整理頁面",
+      },
+    );
   } finally {
     clearTimeout(timeout);
   }

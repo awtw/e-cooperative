@@ -3,6 +3,9 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTaskById } from "@/service/task";
 import { TaskInterface, TaskType, TaskStatus } from "@/types/task";
+import { ErrorState } from "@/components/ui/error-state";
+import { LoadingState } from "@/components/ui/loading-state";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const getTaskTypeLabel = (type: TaskType) => {
   switch (type) {
@@ -46,7 +49,9 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
   const {
     data: task,
     isLoading,
+    isError,
     error,
+    refetch,
   } = useQuery<TaskInterface | undefined, Error>({
     queryKey: ["task", taskId],
     queryFn: () => getTaskById(taskId),
@@ -55,11 +60,38 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
       return list?.find((t) => String(t.id) === String(taskId));
     },
     staleTime: 1000 * 60, // 1 minute
+    retry: 3, // 重試 3 次
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // 指數退避
   });
 
-  if (isLoading) return <div className="p-4">Loading...</div>;
-  if (error) return <div className="p-4 text-red-600">無法載入任務詳情</div>;
-  if (!task) return <div className="p-4">找不到此任務</div>;
+  // 載入狀態
+  if (isLoading) {
+    return <LoadingState message="載入任務詳情中..." variant="spinner" />;
+  }
+
+  // 錯誤狀態
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={() => refetch()}
+        title="無法載入任務詳情"
+        description="無法從伺服器取得任務資料，請檢查網路連線或稍後再試"
+      />
+    );
+  }
+
+  // 找不到任務
+  if (!task) {
+    return (
+      <EmptyState
+        title="找不到此任務"
+        description="此任務可能已被刪除或不存在"
+        actionLabel="返回任務列表"
+        actionHref="/list"
+      />
+    );
+  }
   return (
     <div className="max-w-4xl mx-auto p-6 sm:p-8">
       <div className="bg-white/60 shadow-sm rounded-lg border border-gray-100 overflow-hidden">
@@ -136,7 +168,9 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
               <div>
                 <dt className="text-muted-foreground">需要人數</dt>
                 <dd className="mt-1 text-base">
-                  {task.claimed_count}/{task.required_number_of_people}
+                  {task.maximum_number_of_people === 0 && task.required_number_of_people === 0
+                    ? "無設定"
+                    : `${task.claimed_count}/${task.required_number_of_people}`}
                 </dd>
               </div>
 

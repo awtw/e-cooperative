@@ -2,11 +2,14 @@ import { Providers } from "@/components/common/providers";
 import "./globals.css";
 import type { Metadata } from "next";
 
-import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Suspense } from "react";
 import { COMPANY_NAME } from "@/constant";
 import { Toaster } from "sonner";
 import { Header } from "@/components/common";
 import { FAB } from "@/components/common/fab";
+import { GA_ID } from "@/lib/ga";
+import { AnalyticsListener } from "@/components/common/analytics-listener";
 
 export const metadata: Metadata = {
   title: COMPANY_NAME,
@@ -62,32 +65,18 @@ export default function RootLayout({
             __html: THEME_COLOR_SCRIPT,
           }}
         />
-        {/* Google tag (gtag.js) */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-5J72011VLV"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              
-              gtag('config', 'G-5J72011VLV');
-            `,
-          }}
-        />
       </head>
       <body>
         <Providers>
+          <Suspense fallback={null}>
+            <AnalyticsListener />
+          </Suspense>
           <Header />
           {children}
           <FAB />
           <Toaster position="top-center" />
         </Providers>
+        {GA_ID ? <GoogleAnalytics gaId={GA_ID} /> : null}
       </body>
     </html>
   );
