@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "api:types": "openapi-typescript http://hanservice.synology.me:8923/api/v1/openapi.json -o src/lib/api/types.ts"
+    "api:types": "openapi-typescript https://hualien_guangfu_backend.m9h8.com/api/v1/openapi.json -o src/lib/api/types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

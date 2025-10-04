@@ -5,11 +5,12 @@
 - 以 `openapi-fetch` 建立通用型別安全客戶端，並自動掛載 Authorization header（整合 NextAuth session `accessToken`）
 - 以 React Query 包裝常用任務（task）功能 hooks
 
-Schema 來源：`http://hanservice.synology.me:8923/api/v1/openapi.json`
+Schema 來源：`https://hualien_guangfu_backend.m9h8.com/api/v1/openapi.json`
+<!-- 舊的 http://hanservice.synology.me:8923/api/v1/openapi.json -->
 
 環境變數（可選）：
 ```
-NEXT_PUBLIC_API_BASE_URL=http://hanservice.synology.me:8923
+NEXT_PUBLIC_API_BASE_URL=https://hualien_guangfu_backend.m9h8.com
 ```
 
 ### 2. 型別生成
@@ -20,7 +21,7 @@ pnpm run api:types
 
 - `package.json` 腳本
 ```
-"api:types": "openapi-typescript http://hanservice.synology.me:8923/api/v1/openapi.json -o src/lib/api/types.ts"
+"api:types": "openapi-typescript https://hualien_guangfu_backend.m9h8.com/api/v1/openapi.json -o src/lib/api/types.ts"
 ```
 
 輸出檔案：`src/lib/api/types.ts`
@@ -29,7 +30,7 @@ pnpm run api:types
 檔案：`src/lib/api/client.ts`
 
 設計重點：
-- 預設 Base URL 取自 `NEXT_PUBLIC_API_BASE_URL`，預設值 `http://hanservice.synology.me:8923`
+- 預設 Base URL 取自 `NEXT_PUBLIC_API_BASE_URL`，預設值 `https://hualien_guangfu_backend.m9h8.com`
 - 以 Middleware 方式於每次請求加上 `Content-Type: application/json` 與可選 `Authorization: Bearer <token>`
 
 使用：
