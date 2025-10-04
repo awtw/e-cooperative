@@ -10,6 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ErrorState } from "@/components/ui/error-state";
+import { LoadingState } from "@/components/ui/loading-state";
+import { EmptyState } from "@/components/ui/empty-state";
 import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
 import { useGetTasks } from "./hooks/useGetTasks";
 import { getTaskById } from "@/service/task";
@@ -53,14 +56,33 @@ const getStatusBadge = (status: TaskStatus) => {
 export const TasksCards = () => {
   const router = useRouter();
   const qc = useQueryClient();
-  const { data: tasks, isFetching } = useGetTasks();
+  const { data: tasks, isLoading, isError, error, refetch } = useGetTasks();
 
-  if (isFetching) {
-    return <div className="p-4 text-center">Loading...</div>;
+  // 載入狀態 - 使用骨架屏
+  if (isLoading) {
+    return <LoadingState variant="skeleton" count={8} />;
   }
 
+  // 錯誤狀態 - 顯示錯誤訊息和重試按鈕
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={() => refetch()}
+        title="無法載入任務列表"
+        showHomeButton={false}
+      />
+    );
+  }
+
+  // 空狀態 - 沒有任務資料
   if (!tasks || tasks.length === 0) {
-    return <div className="p-4 text-center">目前沒有任務</div>;
+    return (
+      <EmptyState
+        title="目前沒有任務"
+        description="目前還沒有任何災害應變任務，請稍後再回來查看"
+      />
+    );
   }
 
   return (

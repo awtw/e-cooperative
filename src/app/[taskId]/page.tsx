@@ -27,7 +27,7 @@ export default function TaskDetailPage({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <div className="text-sm text-muted-foreground">任務類型</div>
-              <div>{task.task_type}</div>
+              <div>{task.type}</div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">狀態</div>
@@ -35,17 +35,17 @@ export default function TaskDetailPage({
             </div>
             <div>
               <div className="text-sm text-muted-foreground">地點</div>
-              <div>{task.location_data.address}</div>
+              <div>{task.work_location}</div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">需要人數</div>
               <div>
-                {task.claimed_count}/{task.required_volunteers}
+                {task.claimed_count}/{task.required_number_of_people}
               </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">優先級</div>
-              <div>{task.priority_level}/5</div>
+              <div>{task.danger_level}/5</div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">建立者</div>
