@@ -3,7 +3,7 @@ import { ApiError, ApiErrorType } from "@/lib/errors/api-error";
 
 // API base URL (fallback to known backend if env not set)
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "http://60.249.113.11:8000";
+  process.env.NEXT_PUBLIC_API_URL || "https://hopenet.m9h8.com";
 
 type ApiTask = {
   created_at: string;

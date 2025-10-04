@@ -21,8 +21,8 @@
 
 ### API 基本資訊
 
-- **Base URL**: `http://hanservice.synology.me:8923/api/v1`
-- **OpenAPI 文件**: `http://hanservice.synology.me:8923/api/v1/openapi.json`
+- **Base URL**: `https://hopenet.m9h8.com`
+- **OpenAPI 文件**: `https://hopenet.m9h8.com/docs`
 - **認證方式**: JWT Bearer Token
 - **內容類型**: `application/json`
 
@@ -30,7 +30,7 @@
 
 ```bash
 # .env.local
-NEXT_PUBLIC_API_BASE_URL=http://hanservice.synology.me:8923/api/v1
+NEXT_PUBLIC_API_BASE_URL=https://hopenet.m9h8.com
 ```
 
 ### 型別生成
@@ -42,7 +42,7 @@ npm run api:types
 
 這會執行:
 ```bash
-openapi-typescript http://hanservice.synology.me:8923/api/v1/openapi.json \
+openapi-typescript https://hopenet.m9h8.com/docs \
   -o src/lib/api/types.ts
 ```
 

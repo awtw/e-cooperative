@@ -2,7 +2,7 @@ import createClient, { type Client, type Middleware } from "openapi-fetch";
 import type { paths } from "./types";
 
 export const API_BASE_URL: string =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://hanservice.synology.me:8923";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://hopenet.m9h8.com";
 
 export type ApiClient = Client<paths>;
 
