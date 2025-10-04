@@ -46,12 +46,20 @@ export const Header = () => {
       <div className="container mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 md:px-6">
         {/* Logo 與標題 */}
         <div className="flex items-center gap-4 md:gap-6">
-          <Link href="/list" className="flex items-center gap-2 md:gap-3">
+          {/* Logo 前往首頁 */}
+          <Link href="/" className="flex items-center">
             <Logo />
-            <h1 className="text-lg font-bold md:text-xl">{COMPANY_NAME}</h1>
+          </Link>
+
+          {/* 標題前往列表頁 */}
+          <Link href="/list" className="text-lg font-bold md:text-xl">
+            {COMPANY_NAME}
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="/about"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               關於平台
             </Link>
           </nav>
@@ -84,12 +92,17 @@ export const Header = () => {
                 <User className="mr-2 h-4 w-4" />
                 <span>我的任務</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/dashboard/create")}>
+              <DropdownMenuItem
+                onClick={() => router.push("/dashboard/create")}
+              >
                 <Settings className="mr-2 h-4 w-4" />
                 <span>建立任務</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push("/about")} className="md:hidden">
+              <DropdownMenuItem
+                onClick={() => router.push("/about")}
+                className="md:hidden"
+              >
                 <Info className="mr-2 h-4 w-4" />
                 <span>關於平台</span>
               </DropdownMenuItem>
