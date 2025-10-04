@@ -26,7 +26,7 @@ type ApiTask = {
   danger_level?: number | null;
   claimed_count?: number;
   creator_name?: string;
-  [key: string]: any;
+  // [key: string]: any;
 };
 
 type ApiResponse = {
