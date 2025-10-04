@@ -21,7 +21,7 @@ const createAuthMiddleware = (getAccessToken?: () => string | undefined): Middle
 export const createApiClient = (
   getAccessToken?: () => string | undefined,
   baseUrl: string = API_BASE_URL,
-  fetchOptions?: FetchOptions,
+  fetchOptions?: FetchOptions<paths>,
 ): ApiClient => {
   const client = createClient<paths>({ baseUrl, fetch: fetchOptions?.fetch });
   client.use(createAuthMiddleware(getAccessToken));
