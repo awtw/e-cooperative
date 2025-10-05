@@ -12,6 +12,7 @@ import {
 import { TaskInterface, TaskType } from "@/types/task";
 import StatusBadge from "./status-badge";
 import { useGetTasks } from "./hooks/useGetTasks";
+import { sendEvent } from "@/lib/ga";
 
 const getTaskTypeLabel = (type: TaskType) => {
   switch (type) {
@@ -146,7 +147,7 @@ export const TasksCards = () => {
               })()}
             </div>
             <Link href={`/tasks/${task.id}`}>
-              <Button size="sm" aria-label="查看詳情">
+              <Button size="sm" aria-label="查看詳情" onClick={() => sendEvent("cta_task_view_detail", { task_id: task.id })}>
                 查看詳情
               </Button>
             </Link>

@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Copy, Phone, MapPin, MessageCircle } from "lucide-react";
 import { useCallback } from "react";
 import { LINE_OFFICIAL_URL } from "@/constant";
+import { sendEvent } from "@/lib/ga";
 
 type PhoneEntry = {
   label: string;
@@ -165,6 +166,7 @@ const ContactContent = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="加入 LINE 官方帳號 (另開新視窗)"
+              onClick={() => sendEvent("cta_line_click", { location: "contact" })}
             >
               <Button className="w-full md:w-auto">
                 <MessageCircle className="h-4 w-4" />
@@ -216,6 +218,7 @@ const ContactContent = () => {
                                 href={`tel:${normalizeTelHref(p)}`}
                                 className="inline-flex items-center gap-1.5 text-primary hover:underline"
                                 aria-label={`撥打 ${p}`}
+                                onClick={() => sendEvent("cta_phone_click", { label: entry.label, phone: p })}
                               >
                                 <Phone className="h-4 w-4" />
                                 <span>{p}</span>
@@ -225,7 +228,7 @@ const ContactContent = () => {
                                 size="sm"
                                 className="h-8 px-2 text-xs"
                                 aria-label={`複製電話 ${p}`}
-                                onClick={() => handleCopy(p)}
+                                onClick={() => { handleCopy(p); sendEvent("cta_copy_phone", { label: entry.label, phone: p }); }}
                               >
                                 <Copy className="h-3.5 w-3.5" />
                               </Button>

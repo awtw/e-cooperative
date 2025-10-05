@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useState } from "react";
 import { Separator } from "./ui/separator";
+import { sendEvent } from "@/lib/ga";
 const formSchema = z.object({
   email: z.string().email({
     message: "電子郵件格式不正確",
@@ -54,6 +55,7 @@ export function LoginForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
+      sendEvent("cta_auth_login_submit", { method: "credentials" });
       const result = await signIn("credentials", {
         email: values.email,
         password: values.password,
@@ -62,15 +64,18 @@ export function LoginForm({
 
       if (result?.error) {
         toast.error("帳號或密碼錯誤");
+        sendEvent("auth_login_failure", { method: "credentials" });
         setIsLoading(false);
         return;
       }
 
       toast.success("登入成功");
+      sendEvent("auth_login_success", { method: "credentials" });
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
       toast.error("發生錯誤");
+      sendEvent("auth_login_error", { method: "credentials" });
       setIsLoading(false);
     }
   }

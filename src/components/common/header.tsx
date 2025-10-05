@@ -17,6 +17,7 @@ import { COMPANY_NAME, LINE_OFFICIAL_URL } from "@/constant";
 import { LogIn, LogOut, User, Settings, Info, Menu, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
+import { sendEvent } from "@/lib/ga";
 
 export const Header = () => {
   const session = useSession();
@@ -25,10 +26,12 @@ export const Header = () => {
   const router = useRouter();
 
   const handleLogout = () => {
+    sendEvent("cta_auth_logout", { location: "header" });
     signOut();
   };
 
   const handleLogin = () => {
+    sendEvent("cta_auth_login", { location: "header" });
     router.push("/login");
   };
 
@@ -60,12 +63,14 @@ export const Header = () => {
             <Link
               href="/about"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => sendEvent("cta_nav_click", { to: "/about", location: "header" })}
             >
               關於平台
             </Link>
             <Link
               href="/contact"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => sendEvent("cta_nav_click", { to: "/contact", location: "header" })}
             >
               各大聯絡專線
             </Link>
@@ -75,6 +80,7 @@ export const Header = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               aria-label="加入 LINE 官方帳號 (另開新視窗)"
+              onClick={() => sendEvent("cta_line_click", { location: "header" })}
             >
               <MessageCircle className="h-4 w-4" />
               LINE 官方帳號
@@ -98,11 +104,11 @@ export const Header = () => {
             <DropdownMenuContent align="end" className="w-56 md:hidden">
               <DropdownMenuLabel>導覽</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push("/about")}>
+              <DropdownMenuItem onClick={() => { sendEvent("cta_nav_click", { to: "/about", location: "header_mobile" }); router.push("/about"); }}>
                 <Info className="mr-2 h-4 w-4" />
                 <span>關於平台</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/contact")}>
+              <DropdownMenuItem onClick={() => { sendEvent("cta_nav_click", { to: "/contact", location: "header_mobile" }); router.push("/contact"); }}>
                 <Info className="mr-2 h-4 w-4" />
                 <span>各大聯絡專線</span>
               </DropdownMenuItem>
@@ -113,6 +119,7 @@ export const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center"
+                  onClick={() => sendEvent("cta_line_click", { location: "header_mobile" })}
                 >
                   <MessageCircle className="mr-2 h-4 w-4" />
                   <span>LINE 官方帳號</span>

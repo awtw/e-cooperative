@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
+import { sendEvent } from "@/lib/ga";
 
 const ThemeToggle = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -17,6 +18,11 @@ const ThemeToggle = () => {
 
   const handleToggle = () => {
     setTheme(isDark ? "light" : "dark");
+    sendEvent("cta_theme_toggle", {
+      to: isDark ? "light" : "dark",
+      from: isDark ? "dark" : "light",
+      location: "header",
+    });
   };
 
   return (

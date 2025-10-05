@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { sendEvent } from "@/lib/ga";
 
 export const FAB = () => {
   const router = useRouter();
@@ -16,6 +17,7 @@ export const FAB = () => {
   }
 
   const handleCreate = () => {
+    sendEvent("cta_fab_create", { location: "fab_mobile" });
     router.push("/dashboard/create");
   };
 

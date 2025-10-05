@@ -15,6 +15,8 @@ export const AnalyticsListener = () => {
     const routeToEventName = (path: string): string => {
       if (path === "/" || path.startsWith("/list")) return "view_home";
       if (path.startsWith("/about")) return "view_about";
+      if (path.startsWith("/contact")) return "view_contact";
+      if (path.startsWith("/login")) return "view_login";
       if (path.startsWith("/dashboard/create")) return "view_dashboard_create";
       if (path.startsWith("/dashboard")) return "view_dashboard";
       if (path.startsWith("/tasks/")) return "view_task_detail";
