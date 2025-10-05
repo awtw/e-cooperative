@@ -2,7 +2,8 @@
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTaskById } from "@/service/task";
-import { TaskInterface, TaskType, TaskStatus } from "@/types/task";
+import { TaskInterface, TaskType } from "@/types/task";
+import StatusBadge from "./status-badge";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -24,24 +25,7 @@ const getTaskTypeLabel = (type: TaskType) => {
   }
 };
 
-const getStatusBadge = (status: TaskStatus) => {
-  switch (status) {
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "available":
-      return "bg-green-100 text-green-800";
-    case "claimed":
-      return "bg-blue-100 text-blue-800";
-    case "in_progress":
-      return "bg-purple-100 text-purple-800";
-    case "completed":
-      return "bg-gray-100 text-gray-800";
-    case "cancelled":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
+// status badge is implemented in components/task/status-badge.tsx
 
 export default function TaskDetail({ taskId }: { taskId: string }) {
   const qc = useQueryClient();
@@ -94,47 +78,55 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
   }
   return (
     <div className="max-w-4xl mx-auto p-6 sm:p-8">
-      <div className="bg-white/60 shadow-sm rounded-lg border border-gray-100 overflow-hidden">
+      <div
+        className="border shadow-sm rounded-lg overflow-hidden"
+        style={{
+          backgroundColor: "var(--color-card)",
+          borderColor: "var(--color-border)",
+          color: "var(--color-card-foreground)",
+        }}
+      >
         <div className="p-6 sm:p-8">
           <div className="flex flex-col sm:items-start sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold leading-tight mb-6">
                 {task.title}
               </h1>
-              <div className="mt-2 text-lg text-muted-foreground max-w-xl whitespace-pre-wrap">
+              <div className="mt-2 text-lg text-[var(--color-muted-foreground)] max-w-xl whitespace-pre-wrap">
                 {task.description}
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span
-                className={`px-3 py-1 rounded-full text-lg font-medium ${getStatusBadge(task.status)}`}
-              >
-                {task.status === "pending" && "待審核"}
-                {task.status === "available" && "可認領"}
-                {task.status === "claimed" && "已認領"}
-                {task.status === "in_progress" && "進行中"}
-                {task.status === "completed" && "已完成"}
-                {task.status === "cancelled" && "已取消"}
-              </span>
+              <StatusBadge
+                status={task.status}
+                className="px-3 py-1 rounded-full text-lg font-medium"
+              />
             </div>
           </div>
 
-          <div className="mt-6 border-t pt-6">
+          <div
+            className="mt-6 border-t pt-6"
+            style={{ borderColor: "var(--color-border)" }}
+          >
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
               <div className="sm:col-span-1">
-                <dt className="text-muted-foreground">任務類型</dt>
+                <dt className="text-[var(--color-muted-foreground)]">
+                  任務類型
+                </dt>
                 <dd className="mt-1 text-base font-medium">
                   {getTaskTypeLabel(task.type)}
                 </dd>
               </div>
 
               <div>
-                <dt className="text-muted-foreground">地點</dt>
+                <dt className="text-[var(--color-muted-foreground)]">地點</dt>
                 <dd className="mt-1 text-base">{task.work_location || "無"}</dd>
               </div>
 
               <div>
-                <dt className="text-muted-foreground">開始時間</dt>
+                <dt className="text-[var(--color-muted-foreground)]">
+                  開始時間
+                </dt>
                 <dd className="mt-1 text-base">
                   {task.start_at
                     ? new Date(task.start_at).toLocaleString("zh-TW", {
@@ -150,7 +142,9 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
               </div>
 
               <div>
-                <dt className="text-muted-foreground">截止時間</dt>
+                <dt className="text-[var(--color-muted-foreground)]">
+                  截止時間
+                </dt>
                 <dd className="mt-1 text-base">
                   {task.deadline
                     ? new Date(task.deadline).toLocaleString("zh-TW", {
@@ -166,21 +160,24 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
               </div>
 
               <div>
-                <dt className="text-muted-foreground">需要人數</dt>
+                <dt className="text-[var(--color-muted-foreground)]">
+                  需要人數
+                </dt>
                 <dd className="mt-1 text-base">
-                  {task.maximum_number_of_people === 0 && task.required_number_of_people === 0
+                  {task.maximum_number_of_people === 0 &&
+                  task.required_number_of_people === 0
                     ? "無設定"
                     : `${task.claimed_count}/${task.required_number_of_people}`}
                 </dd>
               </div>
 
               <div>
-                <dt className="text-muted-foreground">優先級</dt>
+                <dt className="text-[var(--color-muted-foreground)]">優先級</dt>
                 <dd className="mt-1 text-base">{task.danger_level}/5</dd>
               </div>
 
               <div className="sm:col-span-2">
-                <dt className="text-muted-foreground">建立者</dt>
+                <dt className="text-[var(--color-muted-foreground)]">建立者</dt>
                 <dd className="mt-1 text-base">
                   {task.creator_name || "光復e互助平台"}
                 </dd>

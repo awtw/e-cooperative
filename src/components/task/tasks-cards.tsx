@@ -9,7 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
+import { TaskInterface, TaskType } from "@/types/task";
+import StatusBadge from "./status-badge";
 import { useGetTasks } from "./hooks/useGetTasks";
 
 const getTaskTypeLabel = (type: TaskType) => {
@@ -29,24 +30,7 @@ const getTaskTypeLabel = (type: TaskType) => {
   }
 };
 
-const getStatusBadge = (status: TaskStatus) => {
-  switch (status) {
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "available":
-      return "bg-green-100 text-green-800";
-    case "claimed":
-      return "bg-blue-100 text-blue-800";
-    case "in_progress":
-      return "bg-purple-100 text-purple-800";
-    case "completed":
-      return "bg-gray-100 text-gray-800";
-    case "cancelled":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
+// use StatusBadge component
 
 export const TasksCards = () => {
   const { data: tasks, isFetching, isError, error, refetch } = useGetTasks();
@@ -85,7 +69,9 @@ export const TasksCards = () => {
           <div className="mb-4 text-sm text-muted-foreground">
             {error instanceof Error ? error.message : "請稍後再試"}
           </div>
-          <Button onClick={() => refetch()} variant="outline">重新整理</Button>
+          <Button onClick={() => refetch()} variant="outline">
+            重新整理
+          </Button>
         </div>
       </div>
     );
@@ -96,7 +82,9 @@ export const TasksCards = () => {
       <div className="p-6 sm:p-12">
         <div className="mx-auto max-w-md text-center">
           <div className="text-2xl font-semibold">目前沒有任務</div>
-          <div className="mt-2 text-muted-foreground">稍後再回來看看，或前往建立新的任務。</div>
+          <div className="mt-2 text-muted-foreground">
+            稍後再回來看看，或前往建立新的任務。
+          </div>
         </div>
       </div>
     );
@@ -111,14 +99,10 @@ export const TasksCards = () => {
               {task.title}
             </CardTitle>
             <CardDescription className="flex flex-wrap items-center gap-2">
-              <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusBadge(task.status)}`}>
-                {task.status === "pending" && "待審核"}
-                {task.status === "available" && "可認領"}
-                {task.status === "claimed" && "已認領"}
-                {task.status === "in_progress" && "進行中"}
-                {task.status === "completed" && "已完成"}
-                {task.status === "cancelled" && "已取消"}
-              </span>
+              <StatusBadge
+                status={task.status}
+                className="px-2 py-0.5 text-xs rounded-full"
+              />
               <span className="text-xs text-muted-foreground">
                 {getTaskTypeLabel(task.type)}
               </span>
@@ -138,7 +122,8 @@ export const TasksCards = () => {
               <div className="flex flex-col">
                 <span className="text-muted-foreground">需要人數</span>
                 <span>
-                  {task.maximum_number_of_people === 0 && task.required_number_of_people === 0
+                  {task.maximum_number_of_people === 0 &&
+                  task.required_number_of_people === 0
                     ? "無設定"
                     : `${task.claimed_count}/${task.required_number_of_people}`}
                 </span>
@@ -161,7 +146,9 @@ export const TasksCards = () => {
               })()}
             </div>
             <Link href={`/tasks/${task.id}`}>
-              <Button size="sm" aria-label="查看詳情">查看詳情</Button>
+              <Button size="sm" aria-label="查看詳情">
+                查看詳情
+              </Button>
             </Link>
           </CardFooter>
         </Card>
