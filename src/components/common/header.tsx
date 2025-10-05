@@ -14,7 +14,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
 import { COMPANY_NAME } from "@/constant";
-import { LogIn, LogOut, User, Settings, Info } from "lucide-react";
+import { LogIn, LogOut, User, Settings, Info, Menu } from "lucide-react";
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 
@@ -73,6 +73,31 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-1.5 md:gap-2">
+          {/* 手機版主選單 */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden h-9 w-9"
+                aria-label="主選單"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 md:hidden">
+              <DropdownMenuLabel>導覽</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => router.push("/about")}>
+                <Info className="mr-2 h-4 w-4" />
+                <span>關於平台</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/contact")}>
+                <Info className="mr-2 h-4 w-4" />
+                <span>各大聯絡專線</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <ThemeToggle />
           {/* 登入狀態 */}
           {isAuthenticated ? (
