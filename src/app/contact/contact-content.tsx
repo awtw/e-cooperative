@@ -3,8 +3,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Phone, MapPin } from "lucide-react";
+import { Copy, Phone, MapPin, MessageCircle } from "lucide-react";
 import { useCallback } from "react";
+import { LINE_OFFICIAL_URL } from "@/constant";
 
 type PhoneEntry = {
   label: string;
@@ -144,6 +145,34 @@ const ContactContent = () => {
             花蓮縣光復鄉馬太鞍溪堰塞湖救災相關專線整理。點擊電話即可撥打。
           </p>
         </header>
+
+        {/* LINE 官方帳號 CTA */}
+        <Card className="mb-6">
+          <CardContent className="flex flex-col items-start justify-between gap-3 p-5 md:flex-row md:items-center md:gap-4 md:p-6">
+            <div className="flex items-start gap-3">
+              <div className="rounded-md bg-primary/10 p-2 text-primary">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-semibold">加入 LINE 官方帳號</p>
+                <p className="text-sm text-muted-foreground">
+                  即時接收最新通知與聯繫方式，掃描或點擊連結加入。
+                </p>
+              </div>
+            </div>
+            <a
+              href={LINE_OFFICIAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="加入 LINE 官方帳號 (另開新視窗)"
+            >
+              <Button className="w-full md:w-auto">
+                <MessageCircle className="h-4 w-4" />
+                <span>加入 LINE 官方帳號</span>
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
 
         <div className="space-y-6">
           {categories.map((category) => (

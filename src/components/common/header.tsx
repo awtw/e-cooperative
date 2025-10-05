@@ -13,8 +13,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
-import { COMPANY_NAME } from "@/constant";
-import { LogIn, LogOut, User, Settings, Info, Menu } from "lucide-react";
+import { COMPANY_NAME, LINE_OFFICIAL_URL } from "@/constant";
+import { LogIn, LogOut, User, Settings, Info, Menu, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 
@@ -69,6 +69,16 @@ export const Header = () => {
             >
               各大聯絡專線
             </Link>
+            <a
+              href={LINE_OFFICIAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="加入 LINE 官方帳號 (另開新視窗)"
+            >
+              <MessageCircle className="h-4 w-4" />
+              LINE 官方帳號
+            </a>
           </nav>
         </div>
 
@@ -95,6 +105,18 @@ export const Header = () => {
               <DropdownMenuItem onClick={() => router.push("/contact")}>
                 <Info className="mr-2 h-4 w-4" />
                 <span>各大聯絡專線</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a
+                  href={LINE_OFFICIAL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  <span>LINE 官方帳號</span>
+                </a>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
