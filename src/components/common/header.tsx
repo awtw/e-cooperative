@@ -67,7 +67,7 @@ export const Header = () => {
               href="/contact"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              聯絡我們
+              各大聯絡專線
             </Link>
           </nav>
         </div>
@@ -120,7 +120,7 @@ export const Header = () => {
                 className="md:hidden"
               >
                 <Info className="mr-2 h-4 w-4" />
-                <span>聯絡我們</span>
+                <span>各大聯絡專線</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />

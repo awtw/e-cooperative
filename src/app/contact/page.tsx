@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ContactContent from "./contact-content";
 
 export const metadata: Metadata = {
-  title: "聯絡通訊資訊 - 光復 e 互助",
+  title: "各大聯絡專線 - 光復 e 互助",
   description:
     "花蓮縣光復鄉馬太鞍溪堰塞湖救災相關聯絡資訊彙整：安心專線、心理諮詢、志工媒合、物資據點、地政/稅務/監理單位等。",
   keywords: [

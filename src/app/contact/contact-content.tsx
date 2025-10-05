@@ -138,7 +138,7 @@ const ContactContent = () => {
       <div className="container mx-auto max-w-screen-xl px-4 md:px-6">
         <header className="mb-8 md:mb-10">
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-            聯絡通訊資訊
+            各大聯絡專線
           </h1>
           <p className="mt-2 text-sm text-muted-foreground md:text-base">
             花蓮縣光復鄉馬太鞍溪堰塞湖救災相關專線整理。點擊電話即可撥打。
