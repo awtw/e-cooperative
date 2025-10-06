@@ -71,7 +71,7 @@ src/
 
 ## API 文檔
 
-後端 API 文檔：http://hanservice.synology.me:8923/api/v1/openapi.json
+後端 API 文檔：`https://hopenet.m9h8.com/docs`
 
 ## 開發規範
 

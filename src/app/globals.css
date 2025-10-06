@@ -4,39 +4,85 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* 字體 */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
+
+  /* 基礎色 */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+
+  /* 品牌色 */
   --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  /* 卡片 */
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  /* Popover */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Muted */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* 語意色 */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* 任務狀態色 */
+  --color-status-pending: var(--status-pending);
+  --color-status-available: var(--status-available);
+  --color-status-claimed: var(--status-claimed);
+  --color-status-in-progress: var(--status-in-progress);
+  --color-status-completed: var(--status-completed);
+  --color-status-cancelled: var(--status-cancelled);
+
+  /* 優先級色 */
+  --color-priority-1: var(--priority-1);
+  --color-priority-2: var(--priority-2);
+  --color-priority-3: var(--priority-3);
+  --color-priority-4: var(--priority-4);
+  --color-priority-5: var(--priority-5);
+
+  /* 邊框與輸入框 */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* 圖表色 */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* 圓角 */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -45,76 +91,177 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+
+  /* 品牌色 - Hope Blue (主色) */
+  --primary: oklch(0.55 0.22 255); /* #2563EB */
+  --primary-foreground: oklch(1 0 0); /* 白色文字 */
+
+  /* 品牌色 - Energy Orange (次色) */
+  --secondary: oklch(0.65 0.21 40); /* #EA580C */
+  --secondary-foreground: oklch(1 0 0); /* 白色文字 */
+
+  /* 中性色階 - Light Mode */
+  --background: oklch(1 0 0); /* #FFFFFF */
+  --foreground: oklch(0.28 0.013 286); /* #1F2937 */
+  --surface: oklch(0.98 0 0); /* #FAFAFA */
+
+  /* 卡片 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.28 0.013 286);
+
+  /* Popover */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.28 0.013 286);
+
+  /* Muted */
+  --muted: oklch(0.96 0.004 286); /* #F3F4F6 */
+  --muted-foreground: oklch(0.51 0.016 258); /* #6B7280 */
+
+  /* Accent */
+  --accent: oklch(0.96 0.004 286);
+  --accent-foreground: oklch(0.28 0.013 286);
+
+  /* 語意色 - Success (綠色) */
+  --success: oklch(0.55 0.15 145); /* #10B981 */
+  --success-foreground: oklch(1 0 0);
+
+  /* 語意色 - Destructive/Error (紅色) */
+  --destructive: oklch(0.55 0.22 25); /* #DC2626 */
+  --destructive-foreground: oklch(1 0 0);
+
+  /* 語意色 - Warning (黃色) */
+  --warning: oklch(0.75 0.15 85); /* #F59E0B */
+  --warning-foreground: oklch(0.28 0.013 286);
+
+  /* 語意色 - Info (藍色) */
+  --info: oklch(0.60 0.18 240); /* #3B82F6 */
+  --info-foreground: oklch(1 0 0);
+
+  /* 任務狀態色 */
+  --status-pending: oklch(0.70 0.12 258); /* 待審核 - 灰藍 */
+  --status-available: oklch(0.60 0.18 240); /* 可認領 - 藍色 */
+  --status-claimed: oklch(0.75 0.15 85); /* 已認領 - 黃色 */
+  --status-in-progress: oklch(0.65 0.21 40); /* 進行中 - 橙色 */
+  --status-completed: oklch(0.55 0.15 145); /* 已完成 - 綠色 */
+  --status-cancelled: oklch(0.51 0.016 258); /* 已取消 - 灰色 */
+
+  /* 優先級色 */
+  --priority-1: oklch(0.51 0.016 258); /* 最低 - 灰色 */
+  --priority-2: oklch(0.60 0.18 240); /* 低 - 藍色 */
+  --priority-3: oklch(0.75 0.15 85); /* 中 - 黃色 */
+  --priority-4: oklch(0.65 0.21 40); /* 高 - 橙色 */
+  --priority-5: oklch(0.55 0.22 25); /* 緊急 - 紅色 */
+
+  /* 邊框與輸入框（提高亮色模式對比） */
+  --border: oklch(0.82 0.01 286); /* #D1D5DB */
+  --input: oklch(0.88 0.006 286); /* #E5E7EB 近似但更穩定 */
+  --ring: oklch(0.52 0.22 255); /* 較深的主色以提升焦點可見度 */
+
+  /* 圖表色 (保留原有) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Sidebar */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.28 0.013 286);
+  --sidebar-primary: oklch(0.55 0.22 255);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.96 0.004 286);
+  --sidebar-accent-foreground: oklch(0.28 0.013 286);
+  --sidebar-border: oklch(0.90 0.004 286);
+  --sidebar-ring: oklch(0.55 0.22 255);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  /* 品牌色 - Hope Blue (主色) - Dark Mode */
+  --primary: oklch(0.70 0.20 255); /* #60A5FA */
+  --primary-foreground: oklch(0.15 0.02 255); /* 深藍文字 */
+
+  /* 品牌色 - Energy Orange (次色) - Dark Mode */
+  --secondary: oklch(0.75 0.19 45); /* #FB923C */
+  --secondary-foreground: oklch(0.15 0.02 45); /* 深橙文字 */
+
+  /* 中性色階 - Dark Mode */
+  --background: oklch(0.15 0.005 264); /* #111827 */
+  --foreground: oklch(0.98 0.002 264); /* #F9FAFB */
+  --surface: oklch(0.22 0.008 264); /* #1F2937 */
+
+  /* 卡片 */
+  --card: oklch(0.22 0.008 264);
+  --card-foreground: oklch(0.98 0.002 264);
+
+  /* Popover */
+  --popover: oklch(0.22 0.008 264);
+  --popover-foreground: oklch(0.98 0.002 264);
+
+  /* Muted */
+  --muted: oklch(0.30 0.010 264); /* #374151 */
+  --muted-foreground: oklch(0.65 0.014 258); /* #9CA3AF */
+
+  /* Accent */
+  --accent: oklch(0.30 0.010 264);
+  --accent-foreground: oklch(0.98 0.002 264);
+
+  /* 語意色 - Success (綠色) - Dark Mode */
+  --success: oklch(0.65 0.14 152); /* #34D399 */
+  --success-foreground: oklch(0.15 0.02 152);
+
+  /* 語意色 - Destructive/Error (紅色) - Dark Mode */
+  --destructive: oklch(0.65 0.21 27); /* #F87171 */
+  --destructive-foreground: oklch(0.15 0.02 27);
+
+  /* 語意色 - Warning (黃色) - Dark Mode */
+  --warning: oklch(0.80 0.14 90); /* #FBBF24 */
+  --warning-foreground: oklch(0.15 0.02 90);
+
+  /* 語意色 - Info (藍色) - Dark Mode */
+  --info: oklch(0.70 0.17 245); /* #60A5FA */
+  --info-foreground: oklch(0.15 0.02 245);
+
+  /* 任務狀態色 - Dark Mode */
+  --status-pending: oklch(0.65 0.10 258); /* 待審核 - 灰藍 */
+  --status-available: oklch(0.70 0.17 245); /* 可認領 - 藍色 */
+  --status-claimed: oklch(0.80 0.14 90); /* 已認領 - 黃色 */
+  --status-in-progress: oklch(0.75 0.19 45); /* 進行中 - 橙色 */
+  --status-completed: oklch(0.65 0.14 152); /* 已完成 - 綠色 */
+  --status-cancelled: oklch(0.55 0.014 258); /* 已取消 - 灰色 */
+
+  /* 優先級色 - Dark Mode */
+  --priority-1: oklch(0.55 0.014 258); /* 最低 - 灰色 */
+  --priority-2: oklch(0.70 0.17 245); /* 低 - 藍色 */
+  --priority-3: oklch(0.80 0.14 90); /* 中 - 黃色 */
+  --priority-4: oklch(0.75 0.19 45); /* 高 - 橙色 */
+  --priority-5: oklch(0.65 0.21 27); /* 緊急 - 紅色 */
+
+  /* 邊框與輸入框（提高暗色模式對比） */
+  --border: oklch(0.42 0.012 264); /* 明顯的深色邊框 */
+  --input: oklch(0.32 0.012 264); /* 輕微亮度提升以區分層級 */
+  --ring: oklch(0.75 0.20 255); /* 更亮焦點色避免與背景混淆 */
+
+  /* 圖表色 (保留原有) */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+
+  /* Sidebar - Dark Mode */
+  --sidebar: oklch(0.22 0.008 264);
+  --sidebar-foreground: oklch(0.98 0.002 264);
+  --sidebar-primary: oklch(0.70 0.20 255);
+  --sidebar-primary-foreground: oklch(0.15 0.02 255);
+  --sidebar-accent: oklch(0.30 0.010 264);
+  --sidebar-accent-foreground: oklch(0.98 0.002 264);
+  --sidebar-border: oklch(0.30 0.010 264 / 0.5);
+  --sidebar-ring: oklch(0.70 0.20 255);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/60;
   }
   body {
     @apply bg-background text-foreground;

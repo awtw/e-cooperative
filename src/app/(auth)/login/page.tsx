@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/login-form";
-import Image from "next/image";
+// import { LoginForm } from "@/components/login-form";
+// import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/options";
@@ -11,7 +11,12 @@ export default async function LoginPage() {
   }
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
+      {/* 目前呈現 */}
+      <div className="flex justify-center items-center text-3xl">
+        網站開發中...
+      </div>
+      {/* 正常登入如下：開發時取消註解 */}
+      {/* <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <LoginForm />
@@ -26,7 +31,7 @@ export default async function LoginPage() {
           width={1000}
           height={1000}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

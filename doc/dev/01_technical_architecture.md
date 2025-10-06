@@ -288,7 +288,7 @@ npm run api:types
 
 執行命令:
 ```bash
-openapi-typescript http://hanservice.synology.me:8923/api/v1/openapi.json \
+openapi-typescript https://hopenet.m9h8.com/docs \
   -o src/lib/api/types.ts
 ```
 
@@ -301,7 +301,7 @@ import type { paths } from "./types";
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  "http://hanservice.synology.me:8923/api/v1";
+  "https://hopenet.m9h8.com";
 
 export type ApiClient = Client<paths>;
 
@@ -603,7 +603,7 @@ export const handleApiError = (error: unknown) => {
 
 ```bash
 # .env.local
-NEXT_PUBLIC_API_BASE_URL=http://hanservice.synology.me:8923/api/v1
+NEXT_PUBLIC_API_BASE_URL=https://hopenet.m9h8.com
 NEXTAUTH_SECRET=your-secret-key
 NEXTAUTH_URL=http://localhost:3000
 ```

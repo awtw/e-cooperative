@@ -1,9 +1,14 @@
-import { TasksCards } from "@/components/task";
+import { Suspense } from "react";
+import HomeRedirectClient from "./home-redirect-client";
 
-export default async function HomePage() {
+export default function HomePage() {
   return (
-    <div className="container mx-auto space-y-5 px-4 py-4">
-      <TasksCards />
-    </div>
+    <Suspense fallback={
+      <div className="container mx-auto flex min-h-[50vh] items-center justify-center">
+        <p className="text-muted-foreground">載入中...</p>
+      </div>
+    }>
+      <HomeRedirectClient />
+    </Suspense>
   );
 }

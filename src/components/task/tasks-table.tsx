@@ -33,12 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  TaskInterface,
-  TaskStatus,
-  TaskType,
-  LocationData,
-} from "@/types/task";
+import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
 import { useGetTasks } from "./hooks/useGetTasks";
 
 const DeadlineCell = ({ deadline }: { deadline: string | null }) => {
@@ -149,11 +144,11 @@ export const columns: ColumnDef<TaskInterface>[] = [
     ),
   },
   {
-    accessorKey: "task_type",
+    accessorKey: "type",
     header: "任務類型",
     cell: ({ row }) => (
       <div className="capitalize">
-        {getTaskTypeLabel(row.getValue("task_type"))}
+        {getTaskTypeLabel(row.getValue("type"))}
       </div>
     ),
   },
@@ -177,10 +172,10 @@ export const columns: ColumnDef<TaskInterface>[] = [
     },
   },
   {
-    accessorKey: "priority_level",
+    accessorKey: "danger_level",
     header: "優先級",
     cell: ({ row }) => {
-      const level = row.getValue("priority_level") as number;
+      const level = row.getValue("danger_level") as number;
       return (
         <div className={`text-center ${getPriorityColor(level)}`}>
           {level}/5
@@ -189,33 +184,33 @@ export const columns: ColumnDef<TaskInterface>[] = [
     },
   },
   {
-    accessorKey: "required_volunteers",
+    accessorKey: "required_number_of_people",
     header: () => <div className="text-center">需要人數</div>,
     cell: ({ row }) => {
-      const required = row.getValue("required_volunteers") as number;
-      const claimed = row.original.claimed_count;
+      const claimed = row.original.claimed_count as number;
+      const required = row.original.required_number_of_people as number;
+      const maximum = (row.original as unknown as { maximum_number_of_people?: number }).maximum_number_of_people ?? 0;
+      const showUnset = maximum === 0 && required === 0;
+      if (showUnset) {
+        return <div className="text-center font-medium">無設定</div>;
+      }
+      const percent = required > 0 ? Math.round((claimed / required) * 100) : 0;
       return (
         <div className="text-center">
           <div className="font-medium">
             {claimed}/{required}
           </div>
-          <div className="text-xs text-gray-500">
-            {Math.round((claimed / required) * 100)}%
-          </div>
+          <div className="text-xs text-gray-500">{percent}%</div>
         </div>
       );
     },
   },
   {
-    accessorKey: "location_data",
+    accessorKey: "work_location",
     header: "地點",
     cell: ({ row }) => {
-      const location = row.getValue("location_data") as LocationData;
-      return (
-        <div className="max-w-[150px] truncate" title={location.address}>
-          {location.address}
-        </div>
-      );
+      const addr = row.getValue("work_location") as string;
+      return <div className="max-w-[150px] truncate" title={addr}>{addr}</div>;
     },
   },
   {
@@ -278,7 +273,7 @@ export function TasksTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

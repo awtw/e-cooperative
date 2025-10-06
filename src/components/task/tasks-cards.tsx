@@ -9,8 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
+import { TaskInterface, TaskType } from "@/types/task";
+import StatusBadge from "./status-badge";
 import { useGetTasks } from "./hooks/useGetTasks";
+import { sendEvent } from "@/lib/ga";
 
 const getTaskTypeLabel = (type: TaskType) => {
   switch (type) {
@@ -29,38 +31,68 @@ const getTaskTypeLabel = (type: TaskType) => {
   }
 };
 
-const getStatusBadge = (status: TaskStatus) => {
-  switch (status) {
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "available":
-      return "bg-green-100 text-green-800";
-    case "claimed":
-      return "bg-blue-100 text-blue-800";
-    case "in_progress":
-      return "bg-purple-100 text-purple-800";
-    case "completed":
-      return "bg-gray-100 text-gray-800";
-    case "cancelled":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
+// use StatusBadge component
 
 export const TasksCards = () => {
-  const { data: tasks, isFetching } = useGetTasks();
+  const { data: tasks, isFetching, isError, error, refetch } = useGetTasks();
 
   if (isFetching) {
-    return <div className="p-4 text-center">Loading...</div>;
+    return (
+      <div className="p-6 sm:p-8">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader className="gap-2">
+                <div className="h-4 w-1/2 rounded bg-muted" />
+                <div className="h-3 w-1/3 rounded bg-muted" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="h-3 w-full rounded bg-muted" />
+                <div className="h-3 w-5/6 rounded bg-muted" />
+                <div className="h-3 w-4/6 rounded bg-muted" />
+              </CardContent>
+              <CardFooter className="justify-between">
+                <div className="h-3 w-24 rounded bg-muted" />
+                <div className="h-8 w-20 rounded bg-muted" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 sm:p-8">
+        <div className="mx-auto max-w-md rounded-md border bg-card p-4 text-card-foreground">
+          <div className="mb-2 text-base font-medium">載入失敗</div>
+          <div className="mb-4 text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "請稍後再試"}
+          </div>
+          <Button onClick={() => refetch()} variant="outline">
+            重新整理
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   if (!tasks || tasks.length === 0) {
-    return <div className="p-4 text-center">目前沒有任務</div>;
+    return (
+      <div className="p-6 sm:p-12">
+        <div className="mx-auto max-w-md text-center">
+          <div className="text-2xl font-semibold">目前沒有任務</div>
+          <div className="mt-2 text-muted-foreground">
+            稍後再回來看看，或前往建立新的任務。
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 p-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:p-4">
       {tasks.map((task: TaskInterface) => (
         <Card key={task.id} className="transition-colors">
           <CardHeader className="gap-2">
@@ -68,16 +100,12 @@ export const TasksCards = () => {
               {task.title}
             </CardTitle>
             <CardDescription className="flex flex-wrap items-center gap-2">
-              <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusBadge(task.status)}`}>
-                {task.status === "pending" && "待審核"}
-                {task.status === "available" && "可認領"}
-                {task.status === "claimed" && "已認領"}
-                {task.status === "in_progress" && "進行中"}
-                {task.status === "completed" && "已完成"}
-                {task.status === "cancelled" && "已取消"}
-              </span>
+              <StatusBadge
+                status={task.status}
+                className="px-2 py-0.5 text-xs rounded-full"
+              />
               <span className="text-xs text-muted-foreground">
-                {getTaskTypeLabel(task.task_type)}
+                {getTaskTypeLabel(task.type)}
               </span>
             </CardDescription>
           </CardHeader>
@@ -88,19 +116,22 @@ export const TasksCards = () => {
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div className="flex flex-col">
                 <span className="text-muted-foreground">地點</span>
-                <span className="line-clamp-1" title={task.location_data.address}>
-                  {task.location_data.address}
+                <span className="line-clamp-1" title={task.work_location}>
+                  {task.work_location}
                 </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">需要人數</span>
                 <span>
-                  {task.claimed_count}/{task.required_volunteers}
+                  {task.maximum_number_of_people === 0 &&
+                  task.required_number_of_people === 0
+                    ? "無設定"
+                    : `${task.claimed_count}/${task.required_number_of_people}`}
                 </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">優先級</span>
-                <span>{task.priority_level}/5</span>
+                <span>{task.danger_level}/5</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">建立者</span>
@@ -116,7 +147,9 @@ export const TasksCards = () => {
               })()}
             </div>
             <Link href={`/tasks/${task.id}`}>
-              <Button size="sm" aria-label="查看詳情">查看詳情</Button>
+              <Button size="sm" aria-label="查看詳情" onClick={() => sendEvent("cta_task_view_detail", { task_id: task.id })}>
+                查看詳情
+              </Button>
             </Link>
           </CardFooter>
         </Card>
@@ -124,5 +157,3 @@ export const TasksCards = () => {
     </div>
   );
 };
-
-
