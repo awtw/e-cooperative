@@ -3,9 +3,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Phone, MapPin, MessageCircle } from "lucide-react";
+import { Copy, Phone, MapPin, MessageCircle, MessageSquarePlus } from "lucide-react";
 import { useCallback } from "react";
-import { LINE_OFFICIAL_URL } from "@/constant";
+import { LINE_OFFICIAL_URL, FEEDBACK_FORM_URL } from "@/constant";
 import { sendEvent } from "@/lib/ga";
 
 type PhoneEntry = {
@@ -243,6 +243,35 @@ const ContactContent = () => {
             </Card>
           ))}
         </div>
+
+        {/* 平台建議表單 CTA */}
+        <Card className="mt-6 border-primary/20 bg-primary/5">
+          <CardContent className="flex flex-col items-start justify-between gap-4 p-5 md:flex-row md:items-center md:gap-6 md:p-6">
+            <div className="flex items-start gap-3">
+              <div className="rounded-md bg-primary/10 p-2.5 text-primary">
+                <MessageSquarePlus className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-lg font-semibold">給我們您的建議</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  您的意見對我們非常重要！歡迎填寫表單，分享您對平台的建議與回饋，協助我們提供更好的服務。
+                </p>
+              </div>
+            </div>
+            <a
+              href={FEEDBACK_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="填寫平台建議表單 (另開新視窗)"
+              onClick={() => sendEvent("cta_feedback_form_click", { location: "contact" })}
+            >
+              <Button size="lg" className="w-full md:w-auto">
+                <MessageSquarePlus className="h-4 w-4" />
+                <span>填寫建議表單</span>
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

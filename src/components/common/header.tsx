@@ -13,8 +13,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
-import { COMPANY_NAME, LINE_OFFICIAL_URL } from "@/constant";
-import { LogIn, LogOut, User, Settings, Info, Menu, MessageCircle } from "lucide-react";
+import { COMPANY_NAME, LINE_OFFICIAL_URL, FEEDBACK_FORM_URL } from "@/constant";
+import { LogIn, LogOut, User, Settings, Info, Menu, MessageCircle, MessageSquarePlus } from "lucide-react";
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import { sendEvent } from "@/lib/ga";
@@ -75,6 +75,17 @@ export const Header = () => {
               各大聯絡專線
             </Link>
             <a
+              href={FEEDBACK_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="填寫意見回饋表單 (另開新視窗)"
+              onClick={() => sendEvent("cta_feedback_form_click", { location: "header" })}
+            >
+              <MessageSquarePlus className="h-4 w-4" />
+              意見回饋
+            </a>
+            <a
               href={LINE_OFFICIAL_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -113,6 +124,18 @@ export const Header = () => {
                 <span>各大聯絡專線</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a
+                  href={FEEDBACK_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                  onClick={() => sendEvent("cta_feedback_form_click", { location: "header_mobile" })}
+                >
+                  <MessageSquarePlus className="mr-2 h-4 w-4" />
+                  <span>意見回饋</span>
+                </a>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <a
                   href={LINE_OFFICIAL_URL}
