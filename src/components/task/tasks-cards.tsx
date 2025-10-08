@@ -11,47 +11,36 @@ import {
 } from "@/components/ui/card";
 import { TaskInterface, TaskType } from "@/types/task";
 import StatusBadge from "./status-badge";
+import { parseContactNumbers, formatDisplayNumber } from "@/lib/phone";
 import { useGetTasks } from "./hooks/useGetTasks";
 import { sendEvent } from "@/lib/ga";
 
-const getTaskTypeLabel = (type: TaskType) => {
-  switch (type) {
-    case "cleanup":
-      return "環境清理";
-    case "rescue":
-      return "緊急救援";
-    case "supply_delivery":
-      return "物資配送";
-    case "medical_aid":
-      return "醫療支援";
-    case "shelter_support":
-      return "收容支援";
-    default:
-      return type;
-  }
-};
-
-// use StatusBadge component
+import { getTaskTypeLabel } from "@/lib/task";
 
 export const TasksCards = () => {
   const { data: tasks, isFetching, isError, error, refetch } = useGetTasks();
+  // tasks 依 created_at 由新到舊排序
+  const sortedTasks = [...(tasks ?? [])].sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
 
   if (isFetching) {
     return (
       <div className="p-6 sm:p-8">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Card key={i} className="animate-pulse">
+            <Card key={i} className="animate-pulse flex flex-col h-full">
               <CardHeader className="gap-2">
                 <div className="h-4 w-1/2 rounded bg-muted" />
                 <div className="h-3 w-1/3 rounded bg-muted" />
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="flex flex-col space-y-2 flex-1">
                 <div className="h-3 w-full rounded bg-muted" />
                 <div className="h-3 w-5/6 rounded bg-muted" />
                 <div className="h-3 w-4/6 rounded bg-muted" />
               </CardContent>
-              <CardFooter className="justify-between">
+              <CardFooter className="mt-auto flex justify-between items-center">
                 <div className="h-3 w-24 rounded bg-muted" />
                 <div className="h-8 w-20 rounded bg-muted" />
               </CardFooter>
@@ -92,9 +81,9 @@ export const TasksCards = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:p-4">
-      {tasks.map((task: TaskInterface) => (
-        <Card key={task.id} className="transition-colors">
+    <div className="grid grid-cols-1 gap-4 p-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:p-4 items-stretch">
+      {sortedTasks.map((task: TaskInterface) => (
+        <Card key={task.id} className="transition-colors flex flex-col h-full">
           <CardHeader className="gap-2">
             <CardTitle className="line-clamp-1 text-base sm:text-lg">
               {task.title}
@@ -109,11 +98,11 @@ export const TasksCards = () => {
               </span>
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="flex flex-col space-y-2 flex-1">
             <p className="text-sm text-muted-foreground line-clamp-2">
               {task.description}
             </p>
-            <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="mt-auto grid grid-cols-2 gap-2 text-sm">
               <div className="flex flex-col">
                 <span className="text-muted-foreground">地點</span>
                 <span className="line-clamp-1" title={task.work_location}>
@@ -122,24 +111,38 @@ export const TasksCards = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-muted-foreground">需要人數</span>
+                <span>{task.weight === 0 ? "無設定" : task.weight}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-muted-foreground">聯絡電話</span>
                 <span>
-                  {task.maximum_number_of_people === 0 &&
-                  task.required_number_of_people === 0
-                    ? "無設定"
-                    : `${task.claimed_count}/${task.required_number_of_people}`}
+                  {(() => {
+                    const nums = parseContactNumbers(task.contact_number);
+                    if (nums.length === 0) return "無";
+                    return (
+                      <div className="flex flex-col">
+                        {nums.map((n) => (
+                          <a
+                            key={n}
+                            href={`tel:${n}`}
+                            className="text-primary underline"
+                            aria-label={`撥打聯絡電話 ${formatDisplayNumber(n)}`}
+                          >
+                            {formatDisplayNumber(n)}
+                          </a>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </span>
               </div>
               <div className="flex flex-col">
-                <span className="text-muted-foreground">優先級</span>
-                <span>{task.danger_level}/5</span>
-              </div>
-              <div className="flex flex-col">
                 <span className="text-muted-foreground">建立者</span>
-                <span>{task.creator_name || "未知"}</span>
+                <span>{task.creator_name || "光復e互助平台"}</span>
               </div>
             </div>
           </CardContent>
-          <CardFooter className="justify-between">
+          <CardFooter className="mt-auto flex justify-between items-center">
             <div className="text-xs text-muted-foreground">
               {(() => {
                 const d = new Date(task.created_at);
@@ -147,7 +150,13 @@ export const TasksCards = () => {
               })()}
             </div>
             <Link href={`/tasks/${task.id}`}>
-              <Button size="sm" aria-label="查看詳情" onClick={() => sendEvent("cta_task_view_detail", { task_id: task.id })}>
+              <Button
+                size="sm"
+                aria-label="查看詳情"
+                onClick={() =>
+                  sendEvent("cta_task_view_detail", { task_id: task.id })
+                }
+              >
                 查看詳情
               </Button>
             </Link>

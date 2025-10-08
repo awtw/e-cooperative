@@ -3,7 +3,10 @@ export type TaskType =
   | "rescue"
   | "supply_delivery"
   | "medical_aid"
-  | "shelter_support";
+  | "shelter_support"
+  | "repair_maintenance"
+  | "equipment_operation"
+  | "community_service";
 export type TaskStatus =
   | "pending"
   | "available"
@@ -31,12 +34,13 @@ export interface TaskInterface {
   // priority_level: number;
   type: TaskType;
   work_location: string;
-  required_number_of_people: number;
+  weight: number;
   maximum_number_of_people?: number;
   required_skills?: string[] | null;
   start_at?: string | null;
   deadline?: string | null;
   danger_level: number;
+  contact_number?: string | null;
   creator_id: string;
   status: TaskStatus;
   approval_status: string;

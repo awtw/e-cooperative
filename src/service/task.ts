@@ -2,8 +2,7 @@ import { TaskInterface, TaskType, TaskStatus } from "@/types/task";
 import { ApiError, ApiErrorType } from "@/lib/errors/api-error";
 
 // API base URL (fallback to known backend if env not set)
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "https://hopenet.m9h8.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://hopenet.m9h8.com";
 
 type ApiTask = {
   created_at: string;
@@ -21,7 +20,7 @@ type ApiTask = {
   contact_number?: string | null;
   registration_location?: string | null;
   work_location?: string | null;
-  required_number_of_people?: number | null;
+  weight?: number | null;
   maximum_number_of_people?: number | null;
   urgency?: number | null;
   danger_level?: number | null;
@@ -39,7 +38,6 @@ type ApiResponse = {
 };
 
 const mapTaskType = (t?: string): TaskType => {
-  console.log("t:", t);
   if (!t) return "cleanup";
   const s = t.toLowerCase();
   if (s.includes("清理") || s.includes("鏟") || s.includes("cleanup"))
@@ -50,6 +48,34 @@ const mapTaskType = (t?: string): TaskType => {
   if (s.includes("醫療") || s.includes("醫")) return "medical_aid";
   if (s.includes("收容") || s.includes("避難") || s.includes("shelter"))
     return "shelter_support";
+  if (
+    s.includes("修繕") ||
+    s.includes("修補") ||
+    s.includes("泥作") ||
+    s.includes("電力") ||
+    s.includes("水電") ||
+    s.includes("牆面") ||
+    s.includes("地板") ||
+    s.includes("配線")
+  )
+    return "repair_maintenance";
+  if (
+    s.includes("機械") ||
+    s.includes("設備") ||
+    s.includes("機具") ||
+    s.includes("抽水機") ||
+    s.includes("發電機") ||
+    s.includes("操作")
+  )
+    return "equipment_operation";
+
+  if (
+    s.includes("廚") ||
+    s.includes("膳") ||
+    s.includes("教會") ||
+    s.includes("社區")
+  )
+    return "community_service";
   return "cleanup";
 };
 
@@ -95,23 +121,15 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
           },
         );
       } else if (res.status === 404) {
-        throw new ApiError(
-          ApiErrorType.CLIENT_ERROR,
-          "無法找到任務資料",
-          {
-            statusCode: res.status,
-            suggestion: "請確認 API 端點設定是否正確，或聯絡系統管理員",
-          },
-        );
+        throw new ApiError(ApiErrorType.CLIENT_ERROR, "無法找到任務資料", {
+          statusCode: res.status,
+          suggestion: "請確認 API 端點設定是否正確，或聯絡系統管理員",
+        });
       } else if (res.status === 401 || res.status === 403) {
-        throw new ApiError(
-          ApiErrorType.CLIENT_ERROR,
-          "您沒有權限存取此資源",
-          {
-            statusCode: res.status,
-            suggestion: "請重新登入或聯絡管理員",
-          },
-        );
+        throw new ApiError(ApiErrorType.CLIENT_ERROR, "您沒有權限存取此資源", {
+          statusCode: res.status,
+          suggestion: "請重新登入或聯絡管理員",
+        });
       } else if (res.status >= 400) {
         throw new ApiError(
           ApiErrorType.CLIENT_ERROR,
@@ -133,10 +151,7 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
 
       const work_location = it.work_location || it.registration_location || "";
 
-      const required_number_of_people =
-        typeof it.required_number_of_people === "number"
-          ? it.required_number_of_people
-          : 0;
+      const weight = typeof it.weight === "number" ? it.weight : 0;
 
       const maximum_number_of_people =
         typeof it.maximum_number_of_people === "number"
@@ -152,7 +167,7 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
         description: it.description ?? "",
         type,
         work_location,
-        required_number_of_people,
+        weight,
         maximum_number_of_people,
         required_skills: null,
         deadline: it.deadline ?? null,
@@ -171,6 +186,7 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
           typeof it.claimed_count === "number" ? it.claimed_count : 0,
         can_claim: status === "available",
         can_edit: false,
+        contact_number: it.contact_number || null,
       } as TaskInterface;
     });
 
@@ -195,37 +211,25 @@ export const getTasks: () => Promise<TaskInterface[]> = async () => {
 
     // 處理逾時錯誤
     if (err instanceof Error && err.name === "AbortError") {
-      throw new ApiError(
-        ApiErrorType.TIMEOUT_ERROR,
-        "伺服器回應時間過長",
-        {
-          originalError: err,
-          suggestion: "網路速度可能較慢，請稍後再試",
-        },
-      );
+      throw new ApiError(ApiErrorType.TIMEOUT_ERROR, "伺服器回應時間過長", {
+        originalError: err,
+        suggestion: "網路速度可能較慢，請稍後再試",
+      });
     }
 
     // 處理 JSON 解析錯誤
     if (err instanceof SyntaxError) {
-      throw new ApiError(
-        ApiErrorType.PARSE_ERROR,
-        "資料格式錯誤",
-        {
-          originalError: err,
-          suggestion: "伺服器回應格式不正確，請重新整理頁面",
-        },
-      );
+      throw new ApiError(ApiErrorType.PARSE_ERROR, "資料格式錯誤", {
+        originalError: err,
+        suggestion: "伺服器回應格式不正確，請重新整理頁面",
+      });
     }
 
     // 其他未知錯誤
-    throw new ApiError(
-      ApiErrorType.UNKNOWN_ERROR,
-      "發生未預期的錯誤",
-      {
-        originalError: err,
-        suggestion: "請稍後再試或返回首頁",
-      },
-    );
+    throw new ApiError(ApiErrorType.UNKNOWN_ERROR, "發生未預期的錯誤", {
+      originalError: err,
+      suggestion: "請稍後再試或返回首頁",
+    });
   } finally {
     clearTimeout(timeout);
   }
@@ -261,32 +265,20 @@ export const getTaskById: (
           },
         );
       } else if (res.status === 404) {
-        throw new ApiError(
-          ApiErrorType.CLIENT_ERROR,
-          "找不到此任務",
-          {
-            statusCode: res.status,
-            suggestion: "此任務可能已被刪除或不存在",
-          },
-        );
+        throw new ApiError(ApiErrorType.CLIENT_ERROR, "找不到此任務", {
+          statusCode: res.status,
+          suggestion: "此任務可能已被刪除或不存在",
+        });
       } else if (res.status === 401 || res.status === 403) {
-        throw new ApiError(
-          ApiErrorType.CLIENT_ERROR,
-          "您沒有權限查看此任務",
-          {
-            statusCode: res.status,
-            suggestion: "請重新登入或聯絡管理員",
-          },
-        );
+        throw new ApiError(ApiErrorType.CLIENT_ERROR, "您沒有權限查看此任務", {
+          statusCode: res.status,
+          suggestion: "請重新登入或聯絡管理員",
+        });
       } else if (res.status >= 400) {
-        throw new ApiError(
-          ApiErrorType.CLIENT_ERROR,
-          "請求發生錯誤",
-          {
-            statusCode: res.status,
-            suggestion: "請返回任務列表或重新整理頁面",
-          },
-        );
+        throw new ApiError(ApiErrorType.CLIENT_ERROR, "請求發生錯誤", {
+          statusCode: res.status,
+          suggestion: "請返回任務列表或重新整理頁面",
+        });
       }
     }
 
@@ -297,10 +289,7 @@ export const getTaskById: (
 
     const work_location = it.work_location || it.registration_location || "";
 
-    const required_number_of_people =
-      typeof it.required_number_of_people === "number"
-        ? it.required_number_of_people
-        : 0;
+    const weight = typeof it.weight === "number" ? it.weight : 0;
 
     const maximum_number_of_people =
       typeof it.maximum_number_of_people === "number"
@@ -316,7 +305,7 @@ export const getTaskById: (
       description: it.description ?? "",
       type,
       work_location,
-      required_number_of_people,
+      weight,
       maximum_number_of_people,
       required_skills: null,
       deadline: it.deadline ?? null,
@@ -358,37 +347,25 @@ export const getTaskById: (
 
     // 處理逾時錯誤
     if (err instanceof Error && err.name === "AbortError") {
-      throw new ApiError(
-        ApiErrorType.TIMEOUT_ERROR,
-        "伺服器回應時間過長",
-        {
-          originalError: err,
-          suggestion: "網路速度可能較慢，請稍後再試",
-        },
-      );
+      throw new ApiError(ApiErrorType.TIMEOUT_ERROR, "伺服器回應時間過長", {
+        originalError: err,
+        suggestion: "網路速度可能較慢，請稍後再試",
+      });
     }
 
     // 處理 JSON 解析錯誤
     if (err instanceof SyntaxError) {
-      throw new ApiError(
-        ApiErrorType.PARSE_ERROR,
-        "資料格式錯誤",
-        {
-          originalError: err,
-          suggestion: "伺服器回應格式不正確，請重新整理頁面",
-        },
-      );
+      throw new ApiError(ApiErrorType.PARSE_ERROR, "資料格式錯誤", {
+        originalError: err,
+        suggestion: "伺服器回應格式不正確，請重新整理頁面",
+      });
     }
 
     // 其他未知錯誤
-    throw new ApiError(
-      ApiErrorType.UNKNOWN_ERROR,
-      "發生未預期的錯誤",
-      {
-        originalError: err,
-        suggestion: "請返回任務列表或重新整理頁面",
-      },
-    );
+    throw new ApiError(ApiErrorType.UNKNOWN_ERROR, "發生未預期的錯誤", {
+      originalError: err,
+      suggestion: "請返回任務列表或重新整理頁面",
+    });
   } finally {
     clearTimeout(timeout);
   }

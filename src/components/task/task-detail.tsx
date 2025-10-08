@@ -4,26 +4,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTaskById } from "@/service/task";
 import { TaskInterface, TaskType } from "@/types/task";
 import StatusBadge from "./status-badge";
+import { parseContactNumbers, formatDisplayNumber } from "@/lib/phone";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { EmptyState } from "@/components/ui/empty-state";
 
-const getTaskTypeLabel = (type: TaskType) => {
-  switch (type) {
-    case "cleanup":
-      return "環境清理";
-    case "rescue":
-      return "緊急救援";
-    case "supply_delivery":
-      return "物資配送";
-    case "medical_aid":
-      return "醫療支援";
-    case "shelter_support":
-      return "收容支援";
-    default:
-      return type;
-  }
-};
+import { getTaskTypeLabel } from "@/lib/task";
 
 // status badge is implemented in components/task/status-badge.tsx
 
@@ -164,16 +150,34 @@ export default function TaskDetail({ taskId }: { taskId: string }) {
                   需要人數
                 </dt>
                 <dd className="mt-1 text-base">
-                  {task.maximum_number_of_people === 0 &&
-                  task.required_number_of_people === 0
-                    ? "無設定"
-                    : `${task.claimed_count}/${task.required_number_of_people}`}
+                  {task.weight === 0 ? "無設定" : task.weight}
                 </dd>
               </div>
 
               <div>
-                <dt className="text-[var(--color-muted-foreground)]">優先級</dt>
-                <dd className="mt-1 text-base">{task.danger_level}/5</dd>
+                <dt className="text-[var(--color-muted-foreground)]">
+                  聯絡電話
+                </dt>
+                <dd className="mt-1 text-base">
+                  {(() => {
+                    const nums = parseContactNumbers(task.contact_number);
+                    if (nums.length === 0) return "無";
+                    return (
+                      <div className="flex flex-col gap-1">
+                        {nums.map((n) => (
+                          <a
+                            key={n}
+                            href={`tel:${n}`}
+                            className="text-primary underline"
+                            aria-label={`撥打聯絡電話 ${formatDisplayNumber(n)}`}
+                          >
+                            {formatDisplayNumber(n)}
+                          </a>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </dd>
               </div>
 
               <div className="sm:col-span-2">

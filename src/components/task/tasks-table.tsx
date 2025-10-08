@@ -33,8 +33,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TaskInterface, TaskStatus, TaskType } from "@/types/task";
+import { TaskInterface, TaskStatus } from "@/types/task";
 import { useGetTasks } from "./hooks/useGetTasks";
+import { getTaskTypeLabel } from "@/lib/task";
+import { parseContactNumbers, formatDisplayNumber } from "@/lib/phone";
 
 const DeadlineCell = ({ deadline }: { deadline: string | null }) => {
   const date = deadline ? new Date(deadline) : null;
@@ -75,23 +77,6 @@ const getStatusColor = (status: TaskStatus) => {
       return "bg-red-100 text-red-800";
     default:
       return "bg-gray-100 text-gray-800";
-  }
-};
-
-const getTaskTypeLabel = (type: TaskType) => {
-  switch (type) {
-    case "cleanup":
-      return "環境清理";
-    case "rescue":
-      return "緊急救援";
-    case "supply_delivery":
-      return "物資配送";
-    case "medical_aid":
-      return "醫療支援";
-    case "shelter_support":
-      return "收容支援";
-    default:
-      return type;
   }
 };
 
@@ -147,9 +132,7 @@ export const columns: ColumnDef<TaskInterface>[] = [
     accessorKey: "type",
     header: "任務類型",
     cell: ({ row }) => (
-      <div className="capitalize">
-        {getTaskTypeLabel(row.getValue("type"))}
-      </div>
+      <div className="capitalize">{getTaskTypeLabel(row.getValue("type"))}</div>
     ),
   },
   {
@@ -172,24 +155,36 @@ export const columns: ColumnDef<TaskInterface>[] = [
     },
   },
   {
-    accessorKey: "danger_level",
-    header: "優先級",
+    accessorKey: "contact_number",
+    header: "聯絡電話",
     cell: ({ row }) => {
-      const level = row.getValue("danger_level") as number;
+      const raw = row.getValue("contact_number") as string | undefined | null;
+      const nums = parseContactNumbers(raw);
+      if (!nums || nums.length === 0)
+        return <div className="text-center">無</div>;
+      const first = nums[0];
       return (
-        <div className={`text-center ${getPriorityColor(level)}`}>
-          {level}/5
+        <div className="text-center">
+          <a
+            href={`tel:${first}`}
+            aria-label={`撥打聯絡電話 ${formatDisplayNumber(first)}`}
+            className="underline"
+          >
+            {formatDisplayNumber(first)}
+          </a>
         </div>
       );
     },
   },
   {
-    accessorKey: "required_number_of_people",
+    accessorKey: "weight",
     header: () => <div className="text-center">需要人數</div>,
     cell: ({ row }) => {
       const claimed = row.original.claimed_count as number;
-      const required = row.original.required_number_of_people as number;
-      const maximum = (row.original as unknown as { maximum_number_of_people?: number }).maximum_number_of_people ?? 0;
+      const required = row.original.weight as number;
+      const maximum =
+        (row.original as unknown as { maximum_number_of_people?: number })
+          .maximum_number_of_people ?? 0;
       const showUnset = maximum === 0 && required === 0;
       if (showUnset) {
         return <div className="text-center font-medium">無設定</div>;
@@ -210,7 +205,11 @@ export const columns: ColumnDef<TaskInterface>[] = [
     header: "地點",
     cell: ({ row }) => {
       const addr = row.getValue("work_location") as string;
-      return <div className="max-w-[150px] truncate" title={addr}>{addr}</div>;
+      return (
+        <div className="max-w-[150px] truncate" title={addr}>
+          {addr}
+        </div>
+      );
     },
   },
   {
@@ -263,6 +262,7 @@ export const columns: ColumnDef<TaskInterface>[] = [
     },
   },
 ];
+
 export function TasksTable() {
   const { data, isFetching } = useGetTasks();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -290,8 +290,6 @@ export function TasksTable() {
       rowSelection,
     },
   });
-
-  console.log(isFetching);
 
   if (isFetching) {
     return <div>Loading...</div>;
@@ -350,18 +348,16 @@ export function TasksTable() {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

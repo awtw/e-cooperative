@@ -8,7 +8,7 @@ export const mockData: TaskInterface[] = [
       "協助受災家戶恢復日常生活，包括水電修繕50名（電力恢復、臨時配線、水管配管及化糞池等）、房屋修繕50名（泥作、門窗修補、牆面及地板修復）、機械維修50名（抽水機、發電機及其他機具維修）、清潔機具操作與支援50名（大型清掃設備操作與協助）。\n📌 注意事項：請攜帶自行用之工具、設備及相關材料，並注意自身安全。因配合當地救援車輛優先原則，建議搭乘火車前往。若遇天候惡化，將視狀況調整或暫停行程。\n📞 志工聯繫專線：0972223409、0972223410",
     type: "rescue",
     work_location: "花蓮縣光復火車站",
-    required_number_of_people: 200,
+    weight: 200,
     required_skills: ["水電修繕", "房屋修繕", "機械維修", "清潔機具操作"],
     deadline: "2025-10-08T17:00:00Z",
     danger_level: 1,
@@ -33,7 +33,7 @@ export const mockData: TaskInterface[] = [
       "需要物資：毛巾100條、抹布100條、小刷子100支、水管100條、清潔手套100雙。\n📞 聯絡電話：0966-589-021",
     type: "supply_delivery",
     work_location: "花蓮糖廠",
-    required_number_of_people: 0, // 純物資需求，不限定人數
+    weight: 0, // 純物資需求，不限定人數
     required_skills: null,
     deadline: null,
     danger_level: 1,
@@ -58,7 +58,7 @@ export const mockData: TaskInterface[] = [
       "需要人力與設備：貨車、堆高機、深入災區清淤志工各50名。\n備註：需具備貨車、堆高機等設備。\n📞 聯絡電話：0927139554",
     type: "cleanup",
     work_location: "花蓮縣花蓮市國盛四街88號",
-    required_number_of_people: 150, // 三項各50人
+    weight: 150, // 三項各50人
     required_skills: ["貨車駕駛", "堆高機操作", "清淤作業"],
     deadline: null,
     danger_level: 1,

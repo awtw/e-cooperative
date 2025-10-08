@@ -40,16 +40,11 @@ export default async function TaskDetailPage({
             </div>
             <div>
               <div className="text-sm text-muted-foreground">需要人數</div>
-            <div>
-              {(task as unknown as { maximum_number_of_people?: number }).maximum_number_of_people === 0 &&
-              task.required_number_of_people === 0
-                ? "無設定"
-                : `${task.claimed_count}/${task.required_number_of_people}`}
-            </div>
+              <div>{task.weight === 0 ? "無設定" : task.weight}</div>
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">優先級</div>
-              <div>{task.danger_level}/5</div>
+              <div className="text-sm text-muted-foreground">聯絡電話</div>
+              <div>{task.contact_number || "無"}</div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">建立者</div>
@@ -58,13 +53,17 @@ export default async function TaskDetailPage({
             <div>
               <div className="text-sm text-muted-foreground">建立時間</div>
               <div>
-                {new Date(task.created_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}
+                {new Date(task.created_at).toLocaleString("zh-TW", {
+                  timeZone: "Asia/Taipei",
+                })}
               </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">最後更新</div>
               <div>
-                {new Date(task.updated_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}
+                {new Date(task.updated_at).toLocaleString("zh-TW", {
+                  timeZone: "Asia/Taipei",
+                })}
               </div>
             </div>
           </div>
