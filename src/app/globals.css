@@ -134,12 +134,12 @@
   --warning-foreground: oklch(0.28 0.013 286);
 
   /* 語意色 - Info (藍色) */
-  --info: oklch(0.60 0.18 240); /* #3B82F6 */
+  --info: oklch(0.6 0.18 240); /* #3B82F6 */
   --info-foreground: oklch(1 0 0);
 
   /* 任務狀態色 */
-  --status-pending: oklch(0.70 0.12 258); /* 待審核 - 灰藍 */
-  --status-available: oklch(0.60 0.18 240); /* 可認領 - 藍色 */
+  --status-pending: oklch(0.7 0.12 258); /* 待審核 - 灰藍 */
+  --status-available: oklch(0.6 0.18 240); /* 可認領 - 藍色 */
   --status-claimed: oklch(0.75 0.15 85); /* 已認領 - 黃色 */
   --status-in-progress: oklch(0.65 0.21 40); /* 進行中 - 橙色 */
   --status-completed: oklch(0.55 0.15 145); /* 已完成 - 綠色 */
@@ -147,7 +147,7 @@
 
   /* 優先級色 */
   --priority-1: oklch(0.51 0.016 258); /* 最低 - 灰色 */
-  --priority-2: oklch(0.60 0.18 240); /* 低 - 藍色 */
+  --priority-2: oklch(0.6 0.18 240); /* 低 - 藍色 */
   --priority-3: oklch(0.75 0.15 85); /* 中 - 黃色 */
   --priority-4: oklch(0.65 0.21 40); /* 高 - 橙色 */
   --priority-5: oklch(0.55 0.22 25); /* 緊急 - 紅色 */
@@ -171,13 +171,13 @@
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.96 0.004 286);
   --sidebar-accent-foreground: oklch(0.28 0.013 286);
-  --sidebar-border: oklch(0.90 0.004 286);
+  --sidebar-border: oklch(0.9 0.004 286);
   --sidebar-ring: oklch(0.55 0.22 255);
 }
 
 .dark {
   /* 品牌色 - Hope Blue (主色) - Dark Mode */
-  --primary: oklch(0.70 0.20 255); /* #60A5FA */
+  --primary: oklch(0.7 0.2 255); /* #60A5FA */
   --primary-foreground: oklch(0.15 0.02 255); /* 深藍文字 */
 
   /* 品牌色 - Energy Orange (次色) - Dark Mode */
@@ -198,11 +198,11 @@
   --popover-foreground: oklch(0.98 0.002 264);
 
   /* Muted */
-  --muted: oklch(0.30 0.010 264); /* #374151 */
+  --muted: oklch(0.3 0.01 264); /* #374151 */
   --muted-foreground: oklch(0.65 0.014 258); /* #9CA3AF */
 
   /* Accent */
-  --accent: oklch(0.30 0.010 264);
+  --accent: oklch(0.3 0.01 264);
   --accent-foreground: oklch(0.98 0.002 264);
 
   /* 語意色 - Success (綠色) - Dark Mode */
@@ -214,32 +214,32 @@
   --destructive-foreground: oklch(0.15 0.02 27);
 
   /* 語意色 - Warning (黃色) - Dark Mode */
-  --warning: oklch(0.80 0.14 90); /* #FBBF24 */
+  --warning: oklch(0.8 0.14 90); /* #FBBF24 */
   --warning-foreground: oklch(0.15 0.02 90);
 
   /* 語意色 - Info (藍色) - Dark Mode */
-  --info: oklch(0.70 0.17 245); /* #60A5FA */
+  --info: oklch(0.7 0.17 245); /* #60A5FA */
   --info-foreground: oklch(0.15 0.02 245);
 
   /* 任務狀態色 - Dark Mode */
-  --status-pending: oklch(0.65 0.10 258); /* 待審核 - 灰藍 */
-  --status-available: oklch(0.70 0.17 245); /* 可認領 - 藍色 */
-  --status-claimed: oklch(0.80 0.14 90); /* 已認領 - 黃色 */
+  --status-pending: oklch(0.65 0.1 258); /* 待審核 - 灰藍 */
+  --status-available: oklch(0.7 0.17 245); /* 可認領 - 藍色 */
+  --status-claimed: oklch(0.8 0.14 90); /* 已認領 - 黃色 */
   --status-in-progress: oklch(0.75 0.19 45); /* 進行中 - 橙色 */
   --status-completed: oklch(0.65 0.14 152); /* 已完成 - 綠色 */
   --status-cancelled: oklch(0.55 0.014 258); /* 已取消 - 灰色 */
 
   /* 優先級色 - Dark Mode */
   --priority-1: oklch(0.55 0.014 258); /* 最低 - 灰色 */
-  --priority-2: oklch(0.70 0.17 245); /* 低 - 藍色 */
-  --priority-3: oklch(0.80 0.14 90); /* 中 - 黃色 */
+  --priority-2: oklch(0.7 0.17 245); /* 低 - 藍色 */
+  --priority-3: oklch(0.8 0.14 90); /* 中 - 黃色 */
   --priority-4: oklch(0.75 0.19 45); /* 高 - 橙色 */
   --priority-5: oklch(0.65 0.21 27); /* 緊急 - 紅色 */
 
   /* 邊框與輸入框（提高暗色模式對比） */
   --border: oklch(0.42 0.012 264); /* 明顯的深色邊框 */
   --input: oklch(0.32 0.012 264); /* 輕微亮度提升以區分層級 */
-  --ring: oklch(0.75 0.20 255); /* 更亮焦點色避免與背景混淆 */
+  --ring: oklch(0.75 0.2 255); /* 更亮焦點色避免與背景混淆 */
 
   /* 圖表色 (保留原有) */
   --chart-1: oklch(0.488 0.243 264.376);
@@ -251,12 +251,12 @@
   /* Sidebar - Dark Mode */
   --sidebar: oklch(0.22 0.008 264);
   --sidebar-foreground: oklch(0.98 0.002 264);
-  --sidebar-primary: oklch(0.70 0.20 255);
+  --sidebar-primary: oklch(0.7 0.2 255);
   --sidebar-primary-foreground: oklch(0.15 0.02 255);
-  --sidebar-accent: oklch(0.30 0.010 264);
+  --sidebar-accent: oklch(0.3 0.01 264);
   --sidebar-accent-foreground: oklch(0.98 0.002 264);
-  --sidebar-border: oklch(0.30 0.010 264 / 0.5);
-  --sidebar-ring: oklch(0.70 0.20 255);
+  --sidebar-border: oklch(0.3 0.01 264 / 0.5);
+  --sidebar-ring: oklch(0.7 0.2 255);
 }
 
 @layer base {
@@ -265,5 +265,31 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* 標頭導覽的 active 樣式，使用全域色票並支援深淺模式 */
+  .nav-link-active {
+    color: var(--color-primary) !important;
+    font-weight: 600;
+    /* 維持與其他導覽項目垂直置中：使用較小上下內距並加入左右內距 */
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    /* 淺色且低飽和度的背景，深色模式下仍保有可讀性 */
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    transition:
+      background-color 120ms ease,
+      transform 120ms ease;
+  }
+
+  /* Mobile dropdown 裡的 active 樣式（加強可觸控區域背景） */
+  .nav-link-active--mobile {
+    color: var(--color-primary) !important;
+    font-weight: 600;
+    /* 手機上只要藍色文字，不要背景或左側條 */
+    background: transparent !important;
+    border-left: none !important;
+    padding-left: 0 !important;
   }
 }
