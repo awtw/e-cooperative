@@ -3,7 +3,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Phone, MapPin, MessageCircle, MessageSquarePlus } from "lucide-react";
+import {
+  Copy,
+  Phone,
+  MapPin,
+  MessageCircle,
+  MessageSquarePlus,
+} from "lucide-react";
 import { useCallback } from "react";
 import { LINE_OFFICIAL_URL, FEEDBACK_FORM_URL } from "@/constant";
 import { sendEvent } from "@/lib/ga";
@@ -24,9 +30,7 @@ type Category = {
 const categories: Category[] = [
   {
     title: "衛生福利部 24 小時免費安心專線",
-    entries: [
-      { label: "安心專線", phones: ["1925"], note: "(依舊愛我)" },
-    ],
+    entries: [{ label: "安心專線", phones: ["1925"], note: "(依舊愛我)" }],
   },
   {
     title: "社區心理衛生中心（心理諮詢）",
@@ -49,16 +53,13 @@ const categories: Category[] = [
   },
   {
     title: "災害藥品諮詢專線",
-    entries: [
-      { label: "花蓮縣衛生局", phones: ["03-822-4750"] },
-    ],
+    entries: [{ label: "花蓮縣衛生局", phones: ["03-822-4750"] }],
   },
   {
     title: "志工/物資聯繫",
     entries: [
       {
-        label:
-          "便當餐食需求、捐贈便當、光復車站志工報到聯繫",
+        label: "便當餐食需求、捐贈便當、光復車站志工報到聯繫",
         phones: ["0972-223-409", "0972-223-410"],
       },
       { label: "志工媒合專線", phones: ["0975-769-035"], note: "（24 小時）" },
@@ -67,7 +68,10 @@ const categories: Category[] = [
         phones: ["0966-589-021"],
         address: "光復鄉大進村糖廠街 19 號",
       },
-      { label: "車輛安置（大農大富平地森林園區停車場）", phones: ["0910-614-250"] },
+      {
+        label: "車輛安置（大農大富平地森林園區停車場）",
+        phones: ["0910-614-250"],
+      },
       {
         label: "受災戶室內水電修繕",
         phones: ["0972-223-364", "03-822-7171 #423", "03-822-7171 #424"],
@@ -113,6 +117,7 @@ const categories: Category[] = [
           "地價稅 #222,#253",
           "房屋稅 #212,#213",
           "娛樂稅 #231,#233",
+          "使用牌照稅 #231,#233",
           "使用牌照稅 #231,#233",
         ],
       },
@@ -166,7 +171,9 @@ const ContactContent = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="加入 LINE 官方帳號 (另開新視窗)"
-              onClick={() => sendEvent("cta_line_click", { location: "contact" })}
+              onClick={() =>
+                sendEvent("cta_line_click", { location: "contact" })
+              }
             >
               <Button className="w-full md:w-auto">
                 <MessageCircle className="h-4 w-4" />
@@ -187,10 +194,13 @@ const ContactContent = () => {
 
                 <ul className="space-y-4">
                   {category.entries.map((entry) => (
-                    <li key={entry.label} className="flex flex-col gap-2">
-                      <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-                        <div>
-                          <p className="font-medium">
+                    <li
+                      key={entry.label}
+                      className="flex flex-col gap-2 md:py-3 md:border-b md:border-muted-foreground/10 last:md:border-b-0"
+                    >
+                      <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
+                        <div className="md:w-96 md:flex-none md:pr-4 md:border-muted-foreground/10">
+                          <p className="font-medium break-words">
                             {entry.label}
                             {entry.note ? (
                               <span className="ml-2 text-muted-foreground">
@@ -211,14 +221,19 @@ const ContactContent = () => {
                           ) : null}
                         </div>
 
-                        <div className="mt-2 grid grid-cols-1 gap-2 md:mt-0 md:grid-cols-2">
+                        <div className="mt-2 flex flex-col gap-2 md:mt-0 md:flex-row md:flex-wrap md:items-start md:justify-end md:gap-3 md:pl-4 md:min-w-0 md:flex-1">
                           {entry.phones.map((p) => (
                             <div key={p} className="flex items-center gap-2">
                               <a
                                 href={`tel:${normalizeTelHref(p)}`}
-                                className="inline-flex items-center gap-1.5 text-primary hover:underline"
+                                className="inline-flex items-center gap-1.5 text-primary hover:underline whitespace-nowrap"
                                 aria-label={`撥打 ${p}`}
-                                onClick={() => sendEvent("cta_phone_click", { label: entry.label, phone: p })}
+                                onClick={() =>
+                                  sendEvent("cta_phone_click", {
+                                    label: entry.label,
+                                    phone: p,
+                                  })
+                                }
                               >
                                 <Phone className="h-4 w-4" />
                                 <span>{p}</span>
@@ -228,7 +243,13 @@ const ContactContent = () => {
                                 size="sm"
                                 className="h-8 px-2 text-xs"
                                 aria-label={`複製電話 ${p}`}
-                                onClick={() => { handleCopy(p); sendEvent("cta_copy_phone", { label: entry.label, phone: p }); }}
+                                onClick={() => {
+                                  handleCopy(p);
+                                  sendEvent("cta_copy_phone", {
+                                    label: entry.label,
+                                    phone: p,
+                                  });
+                                }}
                               >
                                 <Copy className="h-3.5 w-3.5" />
                               </Button>
@@ -263,7 +284,9 @@ const ContactContent = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="填寫平台建議表單 (另開新視窗)"
-              onClick={() => sendEvent("cta_feedback_form_click", { location: "contact" })}
+              onClick={() =>
+                sendEvent("cta_feedback_form_click", { location: "contact" })
+              }
             >
               <Button size="lg" className="w-full md:w-auto">
                 <MessageSquarePlus className="h-4 w-4" />
@@ -278,5 +301,3 @@ const ContactContent = () => {
 };
 
 export default ContactContent;
-
-
