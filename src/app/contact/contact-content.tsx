@@ -222,8 +222,11 @@ const ContactContent = () => {
                         </div>
 
                         <div className="mt-2 flex flex-col gap-2 md:mt-0 md:flex-row md:flex-wrap md:items-start md:justify-end md:gap-3 md:pl-4 md:min-w-0 md:flex-1">
-                          {entry.phones.map((p) => (
-                            <div key={p} className="flex items-center gap-2">
+                          {entry.phones.map((p, idx) => (
+                            <div
+                              key={`${p}-${idx}`}
+                              className="flex items-center gap-2"
+                            >
                               <a
                                 href={`tel:${normalizeTelHref(p)}`}
                                 className="inline-flex items-center gap-1.5 text-primary hover:underline whitespace-nowrap"
