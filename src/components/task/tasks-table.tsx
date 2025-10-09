@@ -80,12 +80,6 @@ const getStatusColor = (status: TaskStatus) => {
   }
 };
 
-const getPriorityColor = (level: number) => {
-  if (level >= 4) return "text-red-600 font-bold";
-  if (level >= 3) return "text-orange-600 font-semibold";
-  return "text-green-600";
-};
-
 export const columns: ColumnDef<TaskInterface>[] = [
   {
     id: "select",

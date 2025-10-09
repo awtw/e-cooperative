@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TaskInterface, TaskType } from "@/types/task";
+import { TaskInterface } from "@/types/task";
 import StatusBadge from "./status-badge";
 import { parseContactNumbers, formatDisplayNumber } from "@/lib/phone";
 import { useGetTasks } from "./hooks/useGetTasks";

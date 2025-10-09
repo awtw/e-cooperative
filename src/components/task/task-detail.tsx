@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTaskById } from "@/service/task";
-import { TaskInterface, TaskType } from "@/types/task";
+import { TaskInterface } from "@/types/task";
 import StatusBadge from "./status-badge";
 import { parseContactNumbers, formatDisplayNumber } from "@/lib/phone";
 import { ErrorState } from "@/components/ui/error-state";

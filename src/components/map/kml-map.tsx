@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Polygon, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Polygon, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 // 修正 Leaflet 預設圖示問題
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+// 使用 Reflect.deleteProperty 避免使用 any
+Reflect.deleteProperty(L.Icon.Default.prototype, "_getIconUrl");
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -94,7 +95,7 @@ function parseKmlToPlacemarks(kmlText: string): PlacemarkData[] {
               color = "#8B0000"; // 左岸：深紅
             }
           } catch (e) {
-            /* ignore */
+            console.warn("error:", e);
           }
 
           placemarks.push({
@@ -141,12 +142,9 @@ const LOCAL_KML_PATH = "/kml/placemarks.kml";
 
 export default function KmlMap({ dataSource }: KmlMapProps) {
   const [placemarks, setPlacemarks] = useState<PlacemarkData[]>([]);
-  const [parseError, setParseError] = useState<string | null>(null);
 
   // 解析 KML 資料
   useEffect(() => {
-    setParseError(null);
-
     try {
       const loadLocalKml = async () => {
         const controller = new AbortController();
@@ -170,7 +168,6 @@ export default function KmlMap({ dataSource }: KmlMapProps) {
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
           console.error("載入本地 KML 失敗:", msg);
-          setParseError(msg);
         }
       };
 
@@ -180,7 +177,6 @@ export default function KmlMap({ dataSource }: KmlMapProps) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "未知錯誤";
       console.error("KML 解析錯誤:", errorMessage);
-      setParseError(errorMessage);
     }
   }, [dataSource]);
 

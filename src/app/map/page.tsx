@@ -1,8 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
-
 // 動態載入地圖元件 (避免 SSR 問題)
 const KmlMapComponent = dynamic(() => import("@/components/map/kml-map"), {
   ssr: false,
@@ -14,7 +12,7 @@ const KmlMapComponent = dynamic(() => import("@/components/map/kml-map"), {
 });
 
 export default function MapPage() {
-  const [dataSource, setDataSource] = useState<"local">("local");
+  const dataSource = "local";
 
   return (
     <div className="container mx-auto p-6">
